@@ -138,6 +138,7 @@
 				<artifactId>kurento-jsonrpc-js</artifactId>
 				<version>${version.kurento.jsonrpc.js}</version>
 			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
