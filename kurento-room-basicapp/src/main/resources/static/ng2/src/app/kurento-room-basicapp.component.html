@@ -1,0 +1,27 @@
+<div id="container">
+		<div id="wrapper">
+			<div id="join" class="animate join">
+				<h1>Join a Room</h1>
+				<form #f="ngForm" (ngSubmit)="register()" accept-charset="UTF-8">
+					<p>
+						<input type="text" name="name" value="" id="name"
+							placeholder="Username" required>
+					</p>
+					<p>
+						<input type="text" name="room" value="" id="roomName"
+							placeholder="Room" required>
+					</p>
+					<p class="submit">
+						<input type="submit" name="commit" value="Join!" id="joinBtn">
+					</p>
+				</form>
+			</div>
+			<div id="room" style="display: none;">
+				<h2 id="room-header"></h2>
+				<div id="myVideo"></div>
+				<div id="participants"></div>
+				<input type="button" id="buttonLeaveRoom" (mouseup)="leaveRoom()"
+					value="Leave room">
+			</div>
+		</div>
+</div>
