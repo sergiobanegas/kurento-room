@@ -11,5 +11,8 @@ target
 log.xml
 nbactions.xml
 *bower_components/
+src/main/resources/static/ng2/node_modules
+src/main/resources/static/ng2/dist/tmp
+src/main/resources/static/ng2/typings
 .externalToolBuilders
 *bin/
