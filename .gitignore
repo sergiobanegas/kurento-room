@@ -13,3 +13,7 @@ nbactions.xml
 *bower_components/
 .externalToolBuilders
 *bin/
+/kurento-room-basicapp/src/main/resources/static/ng2/dist/
+/kurento-room-basicapp/src/main/resources/static/ng2/node_modules/
+/kurento-room-basicapp/src/main/resources/static/ng2/typings/
+/kurento-room-basicapp/src/main/resources/static/ng2/tmp/
