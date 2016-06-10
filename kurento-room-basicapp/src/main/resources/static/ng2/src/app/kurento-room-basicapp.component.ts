@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import {KurentoRoom} from './ts/KurentoRoom'
 
-declare var KurentoRoom: any;
 declare var checkColor: any;
-
+declare var RpcBuilder: any;
+declare var Room;
+declare var Stream;
 @Component({
   moduleId: module.id,
   selector: 'kurento-room-basicapp-app',
@@ -10,15 +12,15 @@ declare var checkColor: any;
   styleUrls: ['kurento-room-basicapp.component.css']
 })
 export class KurentoRoomBasicappAppComponent {
-	private kurento: any;
+	private kurento: KurentoRoom;
 	private room: any;
-
 
 	register() {
 		let userId = (<HTMLInputElement>document.getElementById('name')).value;
 		let roomId = (<HTMLInputElement>document.getElementById('roomName')).value;
 		let wsUri = 'wss://localhost:8443/room';
-		this.kurento = KurentoRoom(wsUri, (error, kurento) => {
+		this.kurento = new KurentoRoom(wsUri, (error?:string, kurento?:KurentoRoom)=>{
+
 			if (error)
 				return console.log(error);
 			window.onbeforeunload = function() {
@@ -84,6 +86,7 @@ export class KurentoRoomBasicappAppComponent {
 			});
 			localStream.init();
 		});
+		this.kurento.initJsonRpcClient();
 	}
 
 	leaveRoom() {
@@ -101,3 +104,4 @@ export class KurentoRoomBasicappAppComponent {
 		this.kurento.close();
 	}
 }
+
