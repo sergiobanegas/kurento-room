@@ -59,7 +59,7 @@ export class KurentoRoom{
   }
 
     //FIXME: callback doesn't work 
-    connectCallback(error:string) {
+    private connectCallback(error:string) {
       if (error) {
         this.callback(error);
       } else {
@@ -67,7 +67,7 @@ export class KurentoRoom{
       }
     }
 
-    isRoomAvailable() {
+    private isRoomAvailable() {
       if (this.room !== undefined && this.room instanceof Room) {
         return true;
       } else {
@@ -76,7 +76,7 @@ export class KurentoRoom{
       }
     }
 
-    disconnectCallback() {
+    private disconnectCallback() {
       console.log('Websocket connection lost');
       if (this.isRoomAvailable()) {
         this.room.onLostConnection();
@@ -85,7 +85,7 @@ export class KurentoRoom{
       }
     }
 
-    reconnectingCallback() {
+    private reconnectingCallback() {
       console.log('Websocket connection lost (reconnecting)');
       if (this.isRoomAvailable()) {
         this.room.onLostConnection();
@@ -94,64 +94,64 @@ export class KurentoRoom{
       }
     }
 
-    reconnectedCallback() {
+    private reconnectedCallback() {
       console.log('Websocket reconnected');
     }
 
-    onParticipantJoined(params:any) {
+    private onParticipantJoined(params:any) {
       if (this.isRoomAvailable()) {
         this.room.onParticipantJoined(params);
       }
     }
 
-    onParticipantPublished(params:any) {
+    private onParticipantPublished(params:any) {
       if (this.isRoomAvailable()) {
         this.room.onParticipantPublished(params);
       }
     }
 
-    onParticipantLeft(params:any) {
+    private onParticipantLeft(params:any) {
       if (this.isRoomAvailable()) {
         this.room.onParticipantLeft(params);
       }
     }
 
-    onParticipantEvicted(params:any) {
+    private onParticipantEvicted(params:any) {
       if (this.isRoomAvailable()) {
         this.room.onParticipantEvicted(params);
       }
     }
 
-    onNewMessage(params:any) {
+    private onNewMessage(params:any) {
       if (this.isRoomAvailable()) {
         this.room.onNewMessage(params);
       }
     }
 
-    iceCandidateEvent(params:any) {
+    private iceCandidateEvent(params:any) {
       if (this.isRoomAvailable()) {
         this.room.recvIceCandidate(params);
       }
     }
 
-    onRoomClosed(params:any) {
+    private onRoomClosed(params: any) {
       if (this.isRoomAvailable()) {
         this.room.onRoomClosed(params);
       }
     }
 
-    onMediaError(params:any) {
+    private onMediaError(params: any) {
       if (this.isRoomAvailable()) {
         this.room.onMediaError(params);
       }
     }
 
-    setRpcParams (params:any) {
+    private setRpcParams(params: any) {
       this.rpcParams = params;
     }
 
     //sendRequest (method:string, params?:any, callback:any) {
-	sendRequest(method: string, callback:any, params?: any) {
+    sendRequest(method: string, callback: any, params?: any) {
       if (params && params instanceof Function) {
         callback = params;
         params = undefined;
@@ -170,30 +170,30 @@ export class KurentoRoom{
       this.jsonRpcClient.send(method, params, callback);
     };
 
-    close (forced?:any) {
+    close(forced?: any) {
       if (this.isRoomAvailable()) {
         this.room.leave(forced, this.jsonRpcClient);
       }
     };
 
-    disconnectParticipant (stream:Stream) {
+    private disconnectParticipant(stream: Stream) {
       if (this.isRoomAvailable()) {
         this.room.disconnect(stream);
       }
     }
     
-    Stream (room:Room, options:any) {
+    Stream(room: Room, options: any) {
       options.participant = room.getLocalParticipant();
       return new Stream(this, true, room, options);
     };
 
-    Room (options:any) {
+    Room(options: any) {
       this.room = new Room(this, options);
       return this.room;
     };
 
     //CHAT
-    sendMessage (room:any, user:any, message:string) {
+    private sendMessage(room: any, user: any, message: string) {
       this.sendRequest('sendMessage', {message: message, userMessage: user, roomMessage: room}, (error, response) => {
         if (error) {
           console.error(error);
@@ -201,7 +201,7 @@ export class KurentoRoom{
       });
     };
     
-    sendCustomRequest (params:any, callback:any) {
+    private sendCustomRequest(params: any, callback: any) {
       this.sendRequest('customRequest', params, callback);
     };    
 

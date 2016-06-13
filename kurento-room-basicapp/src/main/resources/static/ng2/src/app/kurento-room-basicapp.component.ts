@@ -5,12 +5,14 @@ import {Room} from './ts/Room'
 
 declare var checkColor: any;
 declare var RpcBuilder: any;
+
 @Component({
   moduleId: module.id,
   selector: 'kurento-room-basicapp-app',
   templateUrl: 'kurento-room-basicapp.component.html',
   styleUrls: ['kurento-room-basicapp.component.css']
 })
+
 export class KurentoRoomBasicappAppComponent {
 	private kurento: KurentoRoom;
 	private room: Room;
@@ -39,7 +41,7 @@ export class KurentoRoomBasicappAppComponent {
 			});
 
 			localStream.addEventListener("access-accepted", () => {
-				let playVideo = (stream) => {
+				let playVideo = (stream: Stream) => {
 					let elementId = "video-" + stream.getGlobalID();
 					let div = document.createElement('div');
 					div.setAttribute("id", elementId);
@@ -53,7 +55,7 @@ export class KurentoRoomBasicappAppComponent {
 					checkColor(videoTag, canvas, userId);
 				};
 
-				this.room.addEventListener("room-connected", (roomEvent) => {
+				this.room.addEventListener("room-connected", (roomEvent: any) => {
 					document.getElementById('room-header').innerText = 'ROOM \"'
 						+ this.room.getName + '\"';
 					document.getElementById('join').style.display = 'none';
@@ -68,11 +70,11 @@ export class KurentoRoomBasicappAppComponent {
 
 				});
 
-				this.room.addEventListener("stream-added", (streamEvent) => {
+				this.room.addEventListener("stream-added", (streamEvent: any) => {
 					playVideo(streamEvent.stream);
 				});
 
-				this.room.addEventListener("stream-removed", (streamEvent) => {
+				this.room.addEventListener("stream-removed", (streamEvent: any) => {
 					var element = document.getElementById("video-"
 						+ streamEvent.stream.getGlobalID());
 					if (element !== undefined) {
