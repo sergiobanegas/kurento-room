@@ -17,8 +17,8 @@
 // KurentoRoom --------------------------------
 
 declare var RpcBuilder: any;
-declare var Room;
-declare var Stream;
+declare var Room: any;
+declare var Stream: any;
 
 export class KurentoRoom{
   private room: any;
@@ -26,7 +26,7 @@ export class KurentoRoom{
   private jsonRpcClient:any;
   private rpcParams:any;
 
-  constructor(private wsUri:string, private callback:any){
+  constructor(private wsUri: string, private callback: (error?:string, kurento?:KurentoRoom) => any) {
     if (!(this instanceof KurentoRoom))
       return new KurentoRoom(wsUri, callback);
   }
@@ -59,7 +59,7 @@ export class KurentoRoom{
         this.jsonRpcClient = new RpcBuilder.clients.JsonRpcClient(config);
       }
     //FIXME: callback doesn't work 
-    connectCallback(error?:string) {
+    connectCallback(error:string) {
       if (error) {
         this.callback(error);
       } else {
