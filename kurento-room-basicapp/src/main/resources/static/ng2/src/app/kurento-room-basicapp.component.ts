@@ -86,7 +86,6 @@ export class KurentoRoomBasicappAppComponent {
 			});
 			localStream.init();
 		});
-		this.kurento.initJsonRpcClient();
 	}
 
 	leaveRoom() {

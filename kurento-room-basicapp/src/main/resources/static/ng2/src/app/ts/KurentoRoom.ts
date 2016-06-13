@@ -30,9 +30,6 @@ export class KurentoRoom{
   constructor(private wsUri: string, private callback: (error?:string, kurento?:KurentoRoom) => any) {
     if (!(this instanceof KurentoRoom))
       return new KurentoRoom(wsUri, callback);
-  }
-
-  initJsonRpcClient() {
 
     let config = {
       heartbeat: 3000,
@@ -47,18 +44,20 @@ export class KurentoRoom{
       },
       rpc: {
         requestTimeout: 15000,
-            //notifications
-            participantJoined: this.onParticipantJoined,
-            participantPublished: this.onParticipantPublished,
-            participantLeft: this.onParticipantLeft,
-            participantEvicted: this.onParticipantEvicted,
-            sendMessage: this.onNewMessage,
-            iceCandidate: this.iceCandidateEvent,
-            mediaError: this.onMediaError
-          }
-        };
-        this.jsonRpcClient = new RpcBuilder.clients.JsonRpcClient(config);
+        //notifications
+        participantJoined: this.onParticipantJoined,
+        participantPublished: this.onParticipantPublished,
+        participantLeft: this.onParticipantLeft,
+        participantEvicted: this.onParticipantEvicted,
+        sendMessage: this.onNewMessage,
+        iceCandidate: this.iceCandidateEvent,
+        mediaError: this.onMediaError
       }
+    };
+    this.jsonRpcClient = new RpcBuilder.clients.JsonRpcClient(config);
+
+  }
+
     //FIXME: callback doesn't work 
     connectCallback(error:string) {
       if (error) {
