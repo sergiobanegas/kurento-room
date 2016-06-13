@@ -20,7 +20,7 @@ export class Stream{
     private wrStream;
     private wp;
     private id;
-    private video;
+    private video: any;
     private videoElements = [];
     private elements = [];
     private participant;
@@ -157,9 +157,7 @@ export class Stream{
     }
 
     jq(myid) {
-
-    return "#" + myid.replace(/(@|:|\.|\[|\]|,)/g, "\\$1");
-
+        return "#" + myid.replace(/(@|:|\.|\[|\]|,)/g, "\\$1");
     }
 
     init () {

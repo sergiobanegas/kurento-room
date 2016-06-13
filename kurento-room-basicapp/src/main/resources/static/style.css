@@ -296,93 +296,26 @@ input[type=button]:active, input[type=submit]:active {
 	animation-fill-mode: forwards;
 }
 
-@
--webkit-keyframes disapear { 50% {
-	-webkit-transform: translateX(-5%);
-	transform: translateX(-5%);
+@-webkit-keyframes disapear {
+	50% {
+		-webkit-transform: translateX(-5%);
+		transform: translateX(-5%);
+	}
+	100%{
+		-webkit-transform:translateX(200%);
+		transform:translateX(200%);
+	}
 }
 
-100%
-{
--webkit-transform
-
-
-
-
-:
-
-
-
-
-
-translateX
-
-
-
-
-(200%);
-transform
-
-
-
-
-:
-
-
-
-
-
-translateX
-
-
-
-
-(200%);
-}
-}
-@
-keyframes disapear { 50% {
-	-webkit-transform: translateX(-5%);
-	transform: translateX(-5%);
-}
-
-100%
-{
--webkit-transform
-
-
-
-
-:
-
-
-
-
-
-translateX
-
-
-
-
-(200%);
-transform
-
-
-
-
-:
-
-
-
-
-
-translateX
-
-
-
-
-(200%);
-}
+@keyframes disapear {
+	50% {
+		-webkit-transform: translateX(-5%);
+		transform: translateX(-5%);
+	}
+	100%{
+		-webkit-transform:translateX(200%);
+		transform:translateX(200%);
+	}
 }
 a.hovertext {
 	position: relative;
