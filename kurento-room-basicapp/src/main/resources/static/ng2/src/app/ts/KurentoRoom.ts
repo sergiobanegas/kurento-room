@@ -16,12 +16,13 @@
  */
 // KurentoRoom --------------------------------
 
+import {Stream} from './Stream'
+import {Room} from './Room'
+
 declare var RpcBuilder: any;
-declare var Room: any;
-declare var Stream: any;
 
 export class KurentoRoom{
-  private room: any;
+  private room: Room;
   private userName: string;
   private jsonRpcClient:any;
   private rpcParams:any;
@@ -150,7 +151,8 @@ export class KurentoRoom{
       this.rpcParams = params;
     }
 
-    sendRequest (method:any, params:any, callback:any) {
+    //sendRequest (method:string, params?:any, callback:any) {
+	sendRequest(method: string, callback:any, params?: any) {
       if (params && params instanceof Function) {
         callback = params;
         params = undefined;
@@ -175,7 +177,7 @@ export class KurentoRoom{
       }
     };
 
-    disconnectParticipant (stream:any) {
+    disconnectParticipant (stream:Stream) {
       if (this.isRoomAvailable()) {
         this.room.disconnect(stream);
       }

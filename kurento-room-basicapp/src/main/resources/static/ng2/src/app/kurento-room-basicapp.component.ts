@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import {KurentoRoom} from './ts/KurentoRoom'
+import {Stream} from './ts/Stream'
+import {Room} from './ts/Room'
 
 declare var checkColor: any;
 declare var RpcBuilder: any;
-declare var Room;
-declare var Stream;
 @Component({
   moduleId: module.id,
   selector: 'kurento-room-basicapp-app',
@@ -13,7 +13,7 @@ declare var Stream;
 })
 export class KurentoRoomBasicappAppComponent {
 	private kurento: KurentoRoom;
-	private room: any;
+	private room: Room;
 
 	register() {
 		let userId = (<HTMLInputElement>document.getElementById('name')).value;
@@ -55,7 +55,7 @@ export class KurentoRoomBasicappAppComponent {
 
 				this.room.addEventListener("room-connected", (roomEvent) => {
 					document.getElementById('room-header').innerText = 'ROOM \"'
-						+ this.room.name + '\"';
+						+ this.room.getName + '\"';
 					document.getElementById('join').style.display = 'none';
 					document.getElementById('room').style.display = 'block';
 

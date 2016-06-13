@@ -7,12 +7,13 @@
  *
  * stream.hasAudio(); stream.hasVideo(); stream.hasData();
  */
-/*declare type JQuery = any;
+declare type JQuery = any;
 declare var $: JQuery;
 declare var kurentoUtils: any;
 declare var getUserMedia: any;
 declare var RTCSessionDescription: any;
 declare var generateOffer: any;
+declare var EventEmitter: any;
 export class Stream{
     private ee = new EventEmitter();
     private sdpOffer;
@@ -88,7 +89,7 @@ export class Stream{
 
     hideSpinner(spinnerId:string) {
     	spinnerId = (typeof spinnerId === 'undefined') ? this.getGlobalID() : spinnerId;
-        $(jq('progress-' + spinnerId)).hide();
+        $(this.jq('progress-' + spinnerId)).hide();
     }
 
     playOnlyVideo (parentElement, thumbnailId) {
@@ -98,7 +99,7 @@ export class Stream{
         this.video.controls = false;
         if (this.wrStream) {
             this.video.src = URL.createObjectURL(this.wrStream);
-        	$(jq(thumbnailId)).show();
+        	$(this.jq(thumbnailId)).show();
             //this.hideSpinner(); ERROR-> hideSpinner must have one parameter
         } else
             console.log("No wrStream yet for", this.getGlobalID());
@@ -153,6 +154,12 @@ export class Stream{
         } else {
             return this.id + "_webcam";
         }
+    }
+
+    jq(myid) {
+
+    return "#" + myid.replace(/(@|:|\.|\[|\]|,)/g, "\\$1");
+
     }
 
     init () {
@@ -324,7 +331,7 @@ export class Stream{
                     	//is ('native-video-' + that.getGlobalID())
                     	let elementId = this.id;
                         let videoId = elementId.split("-");
-                        $(jq(thumbnailId)).show();
+                        $(this.jq(thumbnailId)).show();
                         this.hideSpinner(videoId[2]);
                     };
                 }
@@ -387,4 +394,4 @@ export class Stream{
 
         console.log(this.getGlobalID() + ": Stream '" + this.id + "' disposed");
     }
-}*/
+}

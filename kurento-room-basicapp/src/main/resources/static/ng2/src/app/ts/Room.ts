@@ -1,4 +1,9 @@
-/*export class Room{
+import {KurentoRoom} from './KurentoRoom'
+import {Stream} from './Stream'
+
+declare var EventEmitter: any;
+declare var Participant: any;
+export class Room{
     private name;
     private streams;
     private participants:any[];
@@ -8,9 +13,9 @@
     private subscribeToStreams;
     private updateSpeakerInterval;
     private thresholdSpeaker;
-    private ee: EventEmitter<any> = new EventEmitter();
+    private ee = new EventEmitter();
 
-    constructor(private kurento: any, private options: any) {
+    constructor(private kurento: KurentoRoom, private options: any) {
         this.ee = new EventEmitter();
         this.subscribeToStreams = options.subscribeToStreams || true;
         this.updateSpeakerInterval = options.updateSpeakerInterval || 1500;
@@ -28,15 +33,19 @@
         }    
     }
 
+    getName() {
+        return this.name;
+    }
+
     getLocalParticipant () {
         return this.localParticipant;
     }
 
-    addEventListener (eventName, listener) {
+    addEventListener (eventName:string, listener:any) {
         this.ee.addListener(eventName, listener);
     }
 
-    emitEvent(eventName, eventsArray) {
+    emitEvent(eventName:string, eventsArray:any) {
         this.ee.emitEvent(eventName, eventsArray);
     }
 
@@ -84,11 +93,11 @@
         });
     }
 
-    subscribe (stream) {
+    subscribe (stream:Stream) {
         stream.subscribe();
     }
 
-    onParticipantPublished(options) {
+    onParticipantPublished(options:any) {
 
         let participant = new Participant(this.kurento, false, this, options);
         let pid: any=participant.getID(); 
@@ -115,7 +124,7 @@
         }
     }
 
-    onParticipantJoined(msg) {
+    onParticipantJoined(msg:any) {
         let participant = new Participant(this.kurento, false, this, msg);
         let pid:any = participant.getID();
         if (!(pid in this.participants)) {
@@ -133,7 +142,7 @@
         }]);
     }
 
-    onParticipantLeft(msg) {
+    onParticipantLeft(msg:any) {
 
         let participant = this.participants[msg.name];
 
@@ -160,13 +169,13 @@
     };
 
 
-    onParticipantEvicted(msg) {
+    onParticipantEvicted(msg:any) {
         this.ee.emitEvent('participant-evicted', [{
             localParticipant: this.localParticipant
         }]);
     };
 
-    onNewMessage(msg) {
+    onNewMessage(msg:any) {
         console.log("New message: " + JSON.stringify(msg));
         let room = msg.room;
         let user = msg.user;
@@ -184,7 +193,7 @@
     }
 
 
-    recvIceCandidate(msg) {
+    recvIceCandidate(msg:any) {
         let candidate = {
             candidate: msg.candidate,
             sdpMid: msg.sdpMid,
@@ -211,7 +220,7 @@
         }
     }
 
-    onRoomClosed(msg) {
+    onRoomClosed(msg:any) {
         console.log("Room closed: " + JSON.stringify(msg));
         let room = msg.room;
         if (room !== undefined) {
@@ -240,7 +249,7 @@
         }
     }
 
-    onMediaError(params) {
+    onMediaError(params:any) {
         console.error("Media error: " + JSON.stringify(params));
         let error = params.error;
         if (error) {
@@ -252,7 +261,7 @@
         }
     }
 
-    leave(forced, jsonRpcClient) {
+    leave(forced:any, jsonRpcClient:any) {
         forced = !!forced;
         console.log("Leaving room (forced=" + forced + ")");
 
@@ -275,7 +284,7 @@
         }
     }
 
-    disconnect(stream) {
+    disconnect(stream:Stream) {
         let participant = stream.getParticipant();
         if (!participant) {
             console.error("Stream to disconnect has no participant", stream);
@@ -314,11 +323,11 @@
         return this.streams;
     }
 
-    addParticipantSpeaking(participantId) {
+    addParticipantSpeaking(participantId:string) {
         this.participantsSpeaking.push(participantId);
     }
 
-    removeParticipantSpeaking(participantId) {
+    removeParticipantSpeaking(participantId:string) {
         let pos = -1;
         for (var i = 0; i < this.participantsSpeaking.length; i++) {
             if (this.participantsSpeaking[i] == participantId) {
@@ -331,4 +340,4 @@
         }
     }
                
-}*/
+}
