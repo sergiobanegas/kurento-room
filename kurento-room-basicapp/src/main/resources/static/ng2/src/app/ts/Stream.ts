@@ -7,6 +7,10 @@
  *
  * stream.hasAudio(); stream.hasVideo(); stream.hasData();
  */
+import {KurentoRoom} from './KurentoRoom'
+import {Room} from './Room'
+import {Participant} from './Participant'
+
 declare type JQuery = any;
 declare var $: JQuery;
 declare var kurentoUtils: any;
@@ -14,23 +18,24 @@ declare var getUserMedia: any;
 declare var RTCSessionDescription: any;
 declare var generateOffer: any;
 declare var EventEmitter: any;
+
 export class Stream{
     private ee = new EventEmitter();
     private sdpOffer;
     private wrStream;
     private wp;
-    private id;
+    private id:string;
     private video: any;
     private videoElements = [];
     private elements = [];
-    private participant;
+    private participant:Participant;
     private speechEvent;
     private recvVideo;
     private recvAudio;
     private showMyRemote = false;
     private localMirrored = false;
 
-    constructor(private kurento: any, private local:any, private room:any, private options:any){
+    constructor(private kurento: KurentoRoom, private local:any, private room:Room, private options:any){
         if (this.options.id) {
             this.id = this.options.id;
         } else {
@@ -76,7 +81,7 @@ export class Stream{
         return this.wp;
     }
 
-    addEventListener (eventName:any, listener:any) {
+    addEventListener (eventName:string, listener:any) {
         this.ee.addListener(eventName, listener);
     }
 
@@ -92,7 +97,7 @@ export class Stream{
         $(this.jq('progress-' + spinnerId)).hide();
     }
 
-    playOnlyVideo (parentElement, thumbnailId) {
+    playOnlyVideo (parentElement:any, thumbnailId:string) {
         this.video = document.createElement('video');
         this.video.id = 'native-video-' + this.getGlobalID();
         this.video.autoplay = true;
@@ -120,7 +125,7 @@ export class Stream{
         }
     }
 
-    playThumbnail (thumbnailId) {
+    playThumbnail (thumbnailId:string) {
 
         let container = document.createElement('div');
         container.className = "participant";
@@ -156,7 +161,7 @@ export class Stream{
         }
     }
 
-    jq(myid) {
+    jq(myid:string) {
         return "#" + myid.replace(/(@|:|\.|\[|\]|,)/g, "\\$1");
     }
 
@@ -184,7 +189,7 @@ export class Stream{
         });
     }
 
-    publishVideoCallback (error, sdpOfferParam, wp) {
+    publishVideoCallback(error: any, sdpOfferParam: any, wp: any) {
     	if (error) {
     		return console.error("(publish) SDP offer error: " 
     				+ JSON.stringify(error));
@@ -206,7 +211,7 @@ export class Stream{
         });
     }
     
-    startVideoCallback (error, sdpOfferParam, wp) {
+    startVideoCallback(error: any, sdpOfferParam: any, wp: any) {
     	if (error) {
     		return console.error("(subscribe) SDP offer error: " 
     				+ JSON.stringify(error));
@@ -225,7 +230,7 @@ export class Stream{
         });
     }
     
-    initWebRtcPeer(sdpOfferCallback) {
+    initWebRtcPeer(sdpOfferCallback: any) {
         if (this.local) {
         	 let options = {
                  videoStream: this.wrStream,
@@ -291,7 +296,7 @@ export class Stream{
         this.initWebRtcPeer(this.startVideoCallback);
     }
 
-    processSdpAnswer (sdpAnswer) {
+    processSdpAnswer(sdpAnswer: any) {
         let answer = new RTCSessionDescription({
             type: 'answer',
             sdp: sdpAnswer,
@@ -307,7 +312,7 @@ export class Stream{
                 this.wrStream = pc.getRemoteStreams()[0];
                 console.log("Peer remote stream", this.wrStream);
                 if (this.wrStream != undefined) {
-                    this.speechEvent = kurentoUtils.WebRtcPeer.hark(this.wrStream, { threshold: this.room.thresholdSpeaker });
+                    this.speechEvent = kurentoUtils.WebRtcPeer.hark(this.wrStream, { threshold: this.room.getThresholdSpeaker() });
                     this.speechEvent.on('speaking', () => {
                         this.room.addParticipantSpeaking(participantId);
                         this.room.emitEvent('stream-speaking', [{

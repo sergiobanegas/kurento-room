@@ -183,7 +183,7 @@ export class KurentoRoom{
       }
     }
     
-    Stream (room:any, options:any) {
+    Stream (room:Room, options:any) {
       options.participant = room.getLocalParticipant();
       return new Stream(this, true, room, options);
     };

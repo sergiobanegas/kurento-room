@@ -1,13 +1,13 @@
 import {KurentoRoom} from './KurentoRoom'
 import {Stream} from './Stream'
+import {Participant} from './Participant'
 
 declare var EventEmitter: any;
-declare var Participant: any;
 export class Room{
     private name;
     private streams;
-    private participants:any[];
-    private participantsSpeaking:any[] = [];
+    private participants:Participant[];
+    private participantsSpeaking:string[] = [];
     private connected = false;
     private localParticipant;
     private subscribeToStreams;
@@ -41,6 +41,10 @@ export class Room{
         return this.localParticipant;
     }
 
+    getThresholdSpeaker () {
+        return this.getThresholdSpeaker;
+    }
+
     addEventListener (eventName:string, listener:any) {
         this.ee.addListener(eventName, listener);
     }
@@ -72,7 +76,7 @@ export class Room{
 
                 for (var exParticipant of exParticipants) {
 
-                    let participant:any = new Participant(this.kurento, false, this,
+                    let participant = new Participant(this.kurento, false, this,
                         exParticipant);
 
                     this.participants[participant.getID()] = participant;
@@ -100,7 +104,7 @@ export class Room{
     onParticipantPublished(options:any) {
 
         let participant = new Participant(this.kurento, false, this, options);
-        let pid: any=participant.getID(); 
+        let pid: number=participant.getID(); 
         if (!(pid in this.participants)) {
             console.info("Publisher not found in participants list by its id", pid);
         } else {
@@ -126,7 +130,7 @@ export class Room{
 
     onParticipantJoined(msg:any) {
         let participant = new Participant(this.kurento, false, this, msg);
-        let pid:any = participant.getID();
+        let pid:number = participant.getID();
         if (!(pid in this.participants)) {
             console.log("New participant to participants list with id", pid);
             this.participants[pid] = participant;

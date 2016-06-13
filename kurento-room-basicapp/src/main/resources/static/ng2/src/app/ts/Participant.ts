@@ -1,10 +1,13 @@
-/*declare var Stream: any;
+import {Stream} from './Stream'
+import {KurentoRoom} from './KurentoRoom'
+import {Room} from './Room'
+
 export class Participant{
 
-    private id: Number;
-    private streams = {};
-    private streamsOpts:any[]= [];
-    constructor(private kurento: any,private local: any, private room: any, private options:any){
+    private id: number;
+    private streams: Stream[] = [];
+    private streamsOpts: any[]= [];
+    constructor(private kurento: KurentoRoom,private local: any, private room: Room, private options:any){
         this.id = this.options.id;
         if (this.options.streams) {
             for (var streamOfOptions of this.options.streams) {
@@ -23,11 +26,11 @@ export class Participant{
             + ", streams opts: ", this.streamsOpts);
     }
 
-    setId(newId:Number) {
+    setId(newId: number) {
         this.id = newId;
     }
 
-    addStream(stream) {
+    addStream(stream: Stream) {
         this.streams[stream.getID()] = stream;
         this.room.getStreams()[stream.getID()] = stream;
     }
@@ -48,7 +51,7 @@ export class Participant{
         return this.id;
     }
 
-    sendIceCandidate(candidate) {
+    sendIceCandidate(candidate: any) {
         console.debug((this.local ? "Local" : "Remote"), "candidate for",
             this.getID(), JSON.stringify(candidate));
         this.kurento.sendRequest("onIceCandidate", {
@@ -64,4 +67,4 @@ export class Participant{
         });
     }
 
-}*/
+}
