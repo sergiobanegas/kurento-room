@@ -14,31 +14,36 @@
  * limitations under the License.
  *
  */
- 
-import {Stream} from './Stream'
-import {KurentoRoom} from './KurentoRoom'
-import {Room} from './Room'
+
+import { KurentoRoom } from './KurentoRoom'
+import { Room } from './Room'
+import { Stream } from './Stream'
 
 export class Participant{
 
     private id: number;
     private streams: Stream[] = [];
     private streamsOpts: any[]= [];
+    
     constructor(private kurento: KurentoRoom,private local: any, private room: Room, private options:any){
+    
         this.id = this.options.id;
         if (this.options.streams) {
             for (var streamOfOptions of this.options.streams) {
+                
                 let streamOpts = {
                     id: streamOfOptions.id,
                     participant: this,
                     recvVideo: (streamOfOptions.recvVideo == undefined ? true : streamOfOptions.recvVideo),
                     recvAudio: (streamOfOptions.recvAudio == undefined ? true : streamOfOptions.recvAudio)
                 }
+                
                 let stream = new Stream(kurento, false, room, streamOpts);
                 this.addStream(stream);
                 this.streamsOpts.push(streamOpts);
             }
         }
+        
         console.log("New " + (local ? "local " : "remote ") + "participant " + this.id
             + ", streams opts: ", this.streamsOpts);
     }
@@ -51,8 +56,6 @@ export class Participant{
         this.streams[stream.getID()] = stream;
         this.room.getStreams()[stream.getID()] = stream;
     }
-
-    //this.addStream = addStream;
 
     getStreams() {
         return this.streams;

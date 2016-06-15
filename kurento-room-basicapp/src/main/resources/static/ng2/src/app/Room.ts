@@ -20,30 +20,36 @@ import {Stream} from './Stream'
 import {Participant} from './Participant'
 
 declare var EventEmitter: any;
-export class Room{
+
+export class Room {
+    
     private name:string;
     private streams: Stream[] = [];
-    private participants:Participant[];
-    private participantsSpeaking:string[] = [];
+    private participants: Participant[] = [];
+    private participantsSpeaking: string[] = [];
     private connected = false;
-    private localParticipant:Participant;
-    private subscribeToStreams:any;
-    private updateSpeakerInterval:any;
-    private thresholdSpeaker:any;
+    private localParticipant: Participant;
+    private subscribeToStreams: any;
+    private updateSpeakerInterval: any;
+    private thresholdSpeaker: any;
     private ee = new EventEmitter();
 
     constructor(private kurento: KurentoRoom, private options: any) {
+        
         this.ee = new EventEmitter();
+        this.name = options.room;
         this.subscribeToStreams = options.subscribeToStreams || true;
         this.updateSpeakerInterval = options.updateSpeakerInterval || 1500;
         this.thresholdSpeaker = options.thresholdSpeaker || -50;
-        setInterval(this.updateMainSpeaker, this.updateSpeakerInterval);
+        setInterval(this.updateMainSpeaker.bind(this), this.updateSpeakerInterval);
         this.localParticipant = new Participant(this.kurento, true, this, { id: this.options.user });
         this.participants[this.options.user] = this.localParticipant;
     }
 
     updateMainSpeaker() {
+        
         if (this.participantsSpeaking.length > 0) {
+            
             this.ee.emitEvent('update-main-speaker', [{
                 participantId: this.participantsSpeaking[this.participantsSpeaking.length - 1]
             }]);
@@ -71,6 +77,7 @@ export class Room{
     }
 
     connect() {
+        
         this.kurento.sendRequest('joinRoom', {
             user: this.options.user,
             room: this.options.room
@@ -114,19 +121,21 @@ export class Room{
         });
     }
 
-    subscribe (stream:Stream) {
+    subscribe(stream:Stream) {
         stream.subscribe();
     }
 
     onParticipantPublished(options:any) {
 
         let participant = new Participant(this.kurento, false, this, options);
-        let pid: number=participant.getID(); 
+        
+        let pid = participant.getID(); 
         if (!(pid in this.participants)) {
             console.info("Publisher not found in participants list by its id", pid);
         } else {
             console.log("Publisher found in participants list by its id", pid);
         }
+        
         //replacing old participant (this one has streams)
         this.participants[pid] = participant;
 
@@ -146,11 +155,14 @@ export class Room{
     }
 
     onParticipantJoined(msg:any) {
+        
         let participant = new Participant(this.kurento, false, this, msg);
-        let pid:number = participant.getID();
+        let pid = participant.getID();
+        
         if (!(pid in this.participants)) {
             console.log("New participant to participants list with id", pid);
             this.participants[pid] = participant;
+            
         } else {
             //use existing so that we don't lose streams info
             console.info("Participant already exists in participants list with " +
@@ -168,6 +180,7 @@ export class Room{
         let participant = this.participants[msg.name];
 
         if (participant !== undefined) {
+            
             delete this.participants[msg.name];
 
             this.ee.emitEvent('participant-left', [{
@@ -180,8 +193,8 @@ export class Room{
                     stream: stream
                 }]);
             }
-
             participant.dispose();
+            
         } else {
             console.warn("Participant " + msg.name
                 + " unknown. Participants: "
@@ -197,17 +210,15 @@ export class Room{
     };
 
     onNewMessage(msg:any) {
+        
         console.log("New message: " + JSON.stringify(msg));
+        
         let room = msg.room;
         let user = msg.user;
         let message = msg.message;
 
         if (user !== undefined) {
-            this.ee.emitEvent('newMessage', [{
-                room: room,
-                user: user,
-                message: message
-            }]);
+            this.ee.emitEvent('newMessage', [{ room, user, message }]);            
         } else {
             console.error("User undefined in new message:", msg);
         }
@@ -215,18 +226,22 @@ export class Room{
 
 
     recvIceCandidate(msg:any) {
+        
         let candidate = {
             candidate: msg.candidate,
             sdpMid: msg.sdpMid,
             sdpMLineIndex: msg.sdpMLineIndex
         }
+        
         let participant = this.participants[msg.endpointName];
+        
         if (!participant) {
             console.error("Participant not found for endpoint " +
                 msg.endpointName + ". Ice candidate will be ignored.",
                 candidate);
             return false;
         }
+        
         let streams = participant.getStreams();
         for (var key in streams) {
             var stream = streams[key];
@@ -242,12 +257,11 @@ export class Room{
     }
 
     onRoomClosed(msg:any) {
+        
         console.log("Room closed: " + JSON.stringify(msg));
         let room = msg.room;
         if (room !== undefined) {
-            this.ee.emitEvent('room-closed', [{
-                room: room
-            }]);
+            this.ee.emitEvent('room-closed', [{ room }]);
         } else {
             console.error("Room undefined in on room closed", msg);
         }
@@ -262,9 +276,7 @@ export class Room{
         console.log('Lost connection in room ' + this.name);
         let room = this.name;
         if (room !== undefined) {
-            this.ee.emitEvent('lost-connection', [{
-                room: room
-            }]);
+            this.ee.emitEvent('lost-connection', [{ room }]);
         } else {
             console.error('Room undefined when lost connection');
         }
@@ -274,19 +286,19 @@ export class Room{
         console.error("Media error: " + JSON.stringify(params));
         let error = params.error;
         if (error) {
-            this.ee.emitEvent('error-media', [{
-                error: error
-            }]);
+            this.ee.emitEvent('error-media', [{ error }]);
         } else {
             console.error("Received undefined media error. Params:", params);
         }
     }
 
     leave(forced:any, jsonRpcClient:any) {
+        
         forced = !!forced;
         console.log("Leaving room (forced=" + forced + ")");
 
         if (this.connected && !forced) {
+            
             this.kurento.sendRequest('leaveRoom', (error, response) => {
                 if (error) {
                     console.error(error);
@@ -296,7 +308,9 @@ export class Room{
         } else {
             jsonRpcClient.close();
         }
+        
         this.connected = false;
+        
         if (this.participants) {
             for (var pid in this.participants) {
                 this.participants[pid].dispose();
@@ -306,7 +320,9 @@ export class Room{
     }
 
     disconnect(stream: Stream) {
+        
         let participant = stream.getParticipant();
+        
         if (!participant) {
             console.error("Stream to disconnect has no participant", stream);
             return false;
@@ -349,6 +365,7 @@ export class Room{
     }
 
     removeParticipantSpeaking(participantId:string) {
+        
         let pos = -1;
         for (var i = 0; i < this.participantsSpeaking.length; i++) {
             if (this.participantsSpeaking[i] == participantId) {
