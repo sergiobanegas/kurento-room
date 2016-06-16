@@ -2,14 +2,12 @@
 		<div id="wrapper">
 			<div id="join" class="animate join">
 				<h1>Join a Room</h1>
-				<form #f="ngForm" (ngSubmit)="register()" accept-charset="UTF-8">
+				<form #f="ngForm" (ngSubmit)="register(userName.value, roomName.value); userName.value='';roomName.value=''" accept-charset="UTF-8">
 					<p>
-						<input type="text" name="name" value="" id="name"
-							placeholder="Username" required>
+						<input #userName type="text" name="name" placeholder="Username" required>
 					</p>
 					<p>
-						<input type="text" name="room" value="" id="roomName"
-							placeholder="Room" required>
+						<input #roomName type="text" name="room" placeholder="Room" required>
 					</p>
 					<p class="submit">
 						<input type="submit" name="commit" value="Join!" id="joinBtn">

@@ -18,10 +18,8 @@ export class KurentoRoomBasicappAppComponent {
 	private kurento: KurentoRoom;
 	private room: Room;
 
-	register() {
+	register(userId: string, roomId: string) {
 		
-        let userId = (<HTMLInputElement>document.getElementById('name')).value;
-		let roomId = (<HTMLInputElement>document.getElementById('roomName')).value;
 		let wsUri = 'wss://127.0.0.1:8443/room';
 		
         this.kurento = new KurentoRoom(wsUri);        
