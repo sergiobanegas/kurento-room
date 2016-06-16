@@ -19,10 +19,11 @@ export class KurentoRoomBasicappAppComponent {
 	private room: Room;
 
 	register(userId: string, roomId: string) {
+				
+		let wsUri = "wss://127.0.0.1:8443/room";
 		
-		let wsUri = 'wss://127.0.0.1:8443/room';
-		
-        this.kurento = new KurentoRoom(wsUri);        
+		this.kurento=new KurentoRoom(wsUri);
+
         this.kurento.connect((error, kurento) => {
 
 			if (error)
@@ -65,8 +66,6 @@ export class KurentoRoomBasicappAppComponent {
 					
                     document.getElementById('room-header').innerText = 'ROOM \"'
 						+ this.room.getName() + '\"';
-					document.getElementById('join').style.display = 'none';
-					document.getElementById('room').style.display = 'block';
 
 					localStream.publish();
 
@@ -98,9 +97,6 @@ export class KurentoRoomBasicappAppComponent {
 	}
 
 	leaveRoom() {
-        
-		document.getElementById('join').style.display = 'block';
-		document.getElementById('room').style.display = 'none';
 
 		let streams = this.room.getStreams();
 		for (var stream of streams) {
@@ -109,7 +105,7 @@ export class KurentoRoomBasicappAppComponent {
 				element.parentNode.removeChild(element);
 			}
 		}
-        
+        this.room = null;
 		this.kurento.close();
 	}
 }

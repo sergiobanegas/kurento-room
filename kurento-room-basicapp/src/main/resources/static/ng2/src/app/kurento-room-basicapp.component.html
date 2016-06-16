@@ -1,6 +1,6 @@
 <div id="container">
 		<div id="wrapper">
-			<div id="join" class="animate join">
+			<div id="join" class="animate join" *ngIf="!room">
 				<h1>Join a Room</h1>
 				<form #f="ngForm" (ngSubmit)="register(userName.value, roomName.value); userName.value='';roomName.value=''" accept-charset="UTF-8">
 					<p>
@@ -14,7 +14,7 @@
 					</p>
 				</form>
 			</div>
-			<div id="room" style="display: none;">
+			<div id="room" *ngIf="room">
 				<h2 id="room-header"></h2>
 				<div id="myVideo"></div>
 				<div id="participants"></div>
