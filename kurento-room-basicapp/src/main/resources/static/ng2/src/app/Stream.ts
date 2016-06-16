@@ -32,7 +32,6 @@ declare var $: JQuery;
 declare var kurentoUtils: any;
 declare var getUserMedia: any;
 declare var RTCSessionDescription: any;
-declare var generateOffer: any;
 declare var EventEmitter: any;
 
 export class Stream{
@@ -257,14 +256,14 @@ export class Stream{
                 	if(error) {
                 		return console.error(error);
                 	}
-                    generateOffer(sdpOfferCallback.bind(this));
+                    this.wp.generateOffer(sdpOfferCallback.bind(this));
                 });
         	} else {
                  this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, (error) => {
                 	if(error) {
                 		return console.error(error);
                 	}
-                    generateOffer(sdpOfferCallback.bind(this));
+                    this.wp.generateOffer(sdpOfferCallback.bind(this));
                 });
         	}        	
         } else {
@@ -284,7 +283,7 @@ export class Stream{
             	if(error) {
             		return console.error(error);
             	}
-                generateOffer(sdpOfferCallback.bind(this));
+                this.wp.generateOffer(sdpOfferCallback.bind(this));
             });
         }
         console.log("Waiting for SDP offer to be generated (" 

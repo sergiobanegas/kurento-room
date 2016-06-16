@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {KurentoRoom} from './ts/KurentoRoom'
-import {Stream} from './ts/Stream'
-import {Room} from './ts/Room'
+import { KurentoRoom } from './KurentoRoom'
+import { Room } from './Room'
+import { Stream } from './Stream'
 
 declare var checkColor: any;
 declare var RpcBuilder: any;
@@ -14,35 +14,43 @@ declare var RpcBuilder: any;
 })
 
 export class KurentoRoomBasicappAppComponent {
+        
 	private kurento: KurentoRoom;
 	private room: Room;
 
 	register() {
-		let userId = (<HTMLInputElement>document.getElementById('name')).value;
+		
+        let userId = (<HTMLInputElement>document.getElementById('name')).value;
 		let roomId = (<HTMLInputElement>document.getElementById('roomName')).value;
-		let wsUri = 'wss://localhost:8443/room';
-		this.kurento = new KurentoRoom(wsUri, (error?:string, kurento?:KurentoRoom)=>{
+		let wsUri = 'wss://127.0.0.1:8443/room';
+		
+        this.kurento = new KurentoRoom(wsUri);        
+        this.kurento.connect((error, kurento) => {
 
 			if (error)
 				return console.log(error);
-			window.onbeforeunload = function() {
+			
+            window.onbeforeunload = function() {
 				this.kurento.close();
-			};
-			this.room = kurento.Room({
+			}
+            
+			this.room = kurento.createRoom({
 				room: roomId,
 				user: userId,
 				subscribeToStreams: true
 			});
 
-			let localStream = kurento.Stream(this.room, {
+			let localStream = kurento.createStream(this.room, {
 				audio: true,
 				video: true,
 				data: true
 			});
 
 			localStream.addEventListener("access-accepted", () => {
-				let playVideo = (stream: Stream) => {
-					let elementId = "video-" + stream.getGlobalID();
+				
+                let playVideo = (stream: Stream) => {
+				
+                    let elementId = "video-" + stream.getGlobalID();
 					let div = document.createElement('div');
 					div.setAttribute("id", elementId);
 					document.getElementById("participants").appendChild(div);
@@ -56,8 +64,9 @@ export class KurentoRoomBasicappAppComponent {
 				};
 
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
-					document.getElementById('room-header').innerText = 'ROOM \"'
-						+ this.room.getName + '\"';
+					
+                    document.getElementById('room-header').innerText = 'ROOM \"'
+						+ this.room.getName() + '\"';
 					document.getElementById('join').style.display = 'none';
 					document.getElementById('room').style.display = 'block';
 
@@ -91,17 +100,18 @@ export class KurentoRoomBasicappAppComponent {
 	}
 
 	leaveRoom() {
+        
 		document.getElementById('join').style.display = 'block';
 		document.getElementById('room').style.display = 'none';
 
 		let streams = this.room.getStreams();
-		for (var streamElement of streams) {
-			let stream = streamElement;
+		for (var stream of streams) {
 			let element = document.getElementById("video-" + stream.getGlobalID());
 			if (element) {
 				element.parentNode.removeChild(element);
 			}
 		}
+        
 		this.kurento.close();
 	}
 }
