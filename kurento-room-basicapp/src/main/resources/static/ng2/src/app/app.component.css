@@ -6,6 +6,11 @@ html {
 	background: #0ca3d2;
 }
 
+.title{
+	text-align: center;
+	color:lightblue;
+}
+
 input[type=checkbox], input[type=radio] {
 	border: 1px solid #c0c0c0;
 	margin: 0 0.1em 0 0;

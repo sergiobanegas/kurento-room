@@ -1,27 +1,31 @@
 import { Component } from '@angular/core';
-import { KurentoRoom } from './KurentoRoom'
-import { Room } from './Room'
-import { Stream } from './Stream'
+import { KurentoRoom } from '../KurentoRoom'
+import { Room } from '../Room'
+import { Stream } from '../Stream'
+import { KurentoroomService } from '../kurentoroom.service'
+import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 
 declare var checkColor: any;
-declare var RpcBuilder: any;
 
 @Component({
-  moduleId: module.id,
-  selector: 'kurento-room-basicapp-app',
-  templateUrl: 'kurento-room-basicapp.component.html',
-  styleUrls: ['kurento-room-basicapp.component.css']
+	moduleId: module.id,
+	selector: 'call',
+	templateUrl: 'call.component.html',
+	styleUrls: ['call.component.css']
 })
 
-export class KurentoRoomBasicappAppComponent {
+export class CallComponent {
         
 	private kurento: KurentoRoom;
 	private room: Room;
+	private localStream: any;
 
-	register(userId: string, roomId: string) {
-				
+	constructor(private kurentoRoomService:KurentoroomService, private router: Router) {
 		let wsUri = "wss://127.0.0.1:8443/room";
-		
+
+		var roomName = this.kurentoRoomService.getRoomName();
+		var userName = this.kurentoRoomService.getUserName();
+
 		this.kurento=new KurentoRoom(wsUri);
 
         this.kurento.connect((error, kurento) => {
@@ -34,8 +38,8 @@ export class KurentoRoomBasicappAppComponent {
 			}
             
 			this.room = kurento.createRoom({
-				room: roomId,
-				user: userId,
+				room: roomName,
+				user: userName,
 				subscribeToStreams: true
 			});
 
@@ -94,6 +98,8 @@ export class KurentoRoomBasicappAppComponent {
 			});
 			localStream.init();
 		});
+        
+
 	}
 
 	leaveRoom() {
@@ -107,6 +113,7 @@ export class KurentoRoomBasicappAppComponent {
 		}
         this.room = null;
 		this.kurento.close();
+		this.router.navigate(['/index']);
 	}
 }
 

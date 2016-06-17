@@ -176,7 +176,7 @@ export class Stream{
         }
     }
 
-    private jq(myid:string) {
+    jq(myid:string) {
         return "#" + myid.replace(/(@|:|\.|\[|\]|,)/g, "\\$1");
     }
 

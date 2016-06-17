@@ -1,2 +1,2 @@
 export * from './environment';
-export * from './kurento-room-basicapp.component';
+export * from './app.component';
