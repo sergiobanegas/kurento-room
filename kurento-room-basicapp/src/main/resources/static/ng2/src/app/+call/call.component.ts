@@ -112,7 +112,7 @@ export class CallComponent {
 		}
         this.room = null;
 		this.kurento.close();
-		this.router.navigate(['/index']);
+		this.router.navigate(['/']);
 	}
 }
 
