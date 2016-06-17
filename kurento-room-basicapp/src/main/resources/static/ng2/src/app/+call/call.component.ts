@@ -18,7 +18,6 @@ export class CallComponent {
         
 	private kurento: KurentoRoom;
 	private room: Room;
-	private localStream: any;
 
 	constructor(private kurentoRoomService:KurentoroomService, private router: Router) {
 		let wsUri = "wss://127.0.0.1:8443/room";
