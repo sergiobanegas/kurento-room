@@ -5,9 +5,6 @@ import { Stream } from '../Stream';
 import { KurentoroomService } from '../kurentoroom.service';
 import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 
-declare var checkColor: any;
-declare var RpcBuilder: any;
-
 @Component({
   moduleId: module.id,
   selector: 'index',
