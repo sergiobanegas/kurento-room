@@ -10,7 +10,6 @@ export class KurentoroomService {
 
 	private kurento: KurentoRoom = new KurentoRoom("wss://127.0.0.1:8443/room");
 	private room: Room;
-	private localStream: any;
 	private roomName: string;
 	private userName: string;
 
@@ -56,9 +55,6 @@ export class KurentoroomService {
 				};
 
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
-
-					document.getElementById('room-header').innerText = 'ROOM \"'
-						+ this.room.getName() + '\"';
 
 					localStream.publish();
 

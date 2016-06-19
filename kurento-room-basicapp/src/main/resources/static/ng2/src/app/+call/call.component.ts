@@ -5,8 +5,6 @@ import { Stream } from '../Stream'
 import { KurentoroomService } from '../kurentoroom.service'
 import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 
-declare var checkColor: any;
-
 @Component({
 	moduleId: module.id,
 	selector: 'call',
@@ -16,10 +14,14 @@ declare var checkColor: any;
 
 export class CallComponent {
         
-	public room = this.kurentoRoomService.getRoomName();
+	public room = 'ROOM "'+this.kurentoRoomService.getRoomName()+'"';
 
 	constructor(private kurentoRoomService:KurentoroomService, private router: Router) {
-		this.kurentoRoomService.connect();        
+		if (this.kurentoRoomService.getRoomName()==undefined || this.kurentoRoomService.getUserName()==undefined){
+			this.router.navigate(['/']);
+		}else{
+			this.kurentoRoomService.connect();  
+		}      
 	}
 
 	leaveRoom() {

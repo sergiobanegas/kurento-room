@@ -1,7 +1,7 @@
 <div id="container">
 		<div id="wrapper">
 			<div id="room">
-				<h2 id="room-header"></h2>
+				<h2 [innerHTML]="room"></h2>
 				<div id="myVideo"></div>
 				<div id="participants"></div>
 				<input type="button" id="button-leave" (mouseup)="leaveRoom()"
