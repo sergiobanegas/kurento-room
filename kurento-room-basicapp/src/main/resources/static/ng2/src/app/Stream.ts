@@ -26,6 +26,7 @@
 import {KurentoRoom} from './KurentoRoom'
 import {Room} from './Room'
 import {Participant} from './Participant'
+import {StreamOptions} from './options.model'
 
 declare type JQuery = any;
 declare var $: JQuery;
@@ -36,21 +37,21 @@ declare var EventEmitter: any;
 
 export class Stream{
     private ee = new EventEmitter();
-    private sdpOffer;
-    private wrStream;
-    private wp;
+    private sdpOffer:string;
+    private wrStream:any;
+    private wp:any;
     private id:string;
     private video: any;
-    private videoElements = [];
-    private elements = [];
+    private videoElements: any[] = [];
+    private elements: any = [];
     private participant:Participant;
-    private speechEvent;
-    private recvVideo;
-    private recvAudio;
+    private speechEvent:any;
+    private recvVideo:any;
+    private recvAudio:any;
     private showMyRemote = false;
     private localMirrored = false;
 
-    constructor(private kurento: KurentoRoom, private local:any, private room:Room, private options:any){
+    constructor(private kurento: KurentoRoom, private local:boolean, private room:Room, private options:StreamOptions){
         if (this.options.id) {
             this.id = this.options.id;
         } else {
@@ -204,7 +205,7 @@ export class Stream{
         });
     }
 
-    publishVideoCallback(error: any, sdpOfferParam: any, wp: any) {
+    publishVideoCallback(error: string, sdpOfferParam: string, wp: any) {
     	if (error) {
     		return console.error("(publish) SDP offer error: " 
     				+ JSON.stringify(error));
@@ -226,7 +227,7 @@ export class Stream{
         });
     }
     
-    startVideoCallback(error: any, sdpOfferParam: any, wp: any) {
+    startVideoCallback(error: string, sdpOfferParam: string, wp: any) {
     	if (error) {
     		return console.error("(subscribe) SDP offer error: " 
     				+ JSON.stringify(error));
@@ -383,7 +384,7 @@ export class Stream{
     
     dispose () {
 
-        function disposeElement(element) {
+        function disposeElement(element:any) {
             if (element && element.parentNode) {
                 element.parentNode.removeChild(element);
             }

@@ -18,14 +18,15 @@
 import { KurentoRoom } from './KurentoRoom'
 import { Room } from './Room'
 import { Stream } from './Stream'
+import {ParticipantOptions, StreamOptions} from './options.model'
 
 export class Participant{
 
-    private id: number;
+    private id: string;
     private streams: Stream[] = [];
-    private streamsOpts: any[]= [];
+    private streamsOpts: StreamOptions[] = [];
     
-    constructor(private kurento: KurentoRoom,private local: any, private room: Room, private options:any){
+    constructor(private kurento: KurentoRoom,private local: boolean, private room: Room, private options:ParticipantOptions){
     
         this.id = this.options.id;
         if (this.options.streams) {
@@ -35,7 +36,11 @@ export class Participant{
                     id: streamOfOptions.id,
                     participant: this,
                     recvVideo: (streamOfOptions.recvVideo == undefined ? true : streamOfOptions.recvVideo),
-                    recvAudio: (streamOfOptions.recvAudio == undefined ? true : streamOfOptions.recvAudio)
+                    recvAudio: (streamOfOptions.recvAudio == undefined ? true : streamOfOptions.recvAudio),
+                    audio: streamOfOptions.audio,
+                    video: streamOfOptions.video,
+                    data: streamOfOptions.data
+
                 }
                 
                 let stream = new Stream(kurento, false, room, streamOpts);
@@ -48,7 +53,7 @@ export class Participant{
             + ", streams opts: ", this.streamsOpts);
     }
 
-    setId(newId: number) {
+    setId(newId: string) {
         this.id = newId;
     }
 

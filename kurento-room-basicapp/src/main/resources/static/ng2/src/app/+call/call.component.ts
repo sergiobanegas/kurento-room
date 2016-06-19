@@ -39,7 +39,9 @@ export class CallComponent {
 			this.room = kurento.createRoom({
 				room: roomName,
 				user: userName,
-				subscribeToStreams: true
+				subscribeToStreams: true,
+				updateSpeakerInterval: null,
+				thresholdSpeaker: null
 			});
 
 			let localStream = kurento.createStream(this.room, {

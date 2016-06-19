@@ -18,6 +18,7 @@
 
 import { Stream } from './Stream'
 import { Room } from './Room'
+import {RoomOptions } from './options.model'
 
 declare var RpcBuilder: any;
 
@@ -177,7 +178,7 @@ export class KurentoRoom {
         this.jsonRpcClient.send(method, params, callback);
     };
 
-    close(forced?: any) {
+    close(forced?: boolean) {
         if (this.isRoomAvailable()) {
             this.room.leave(forced, this.jsonRpcClient);
         }
@@ -194,12 +195,12 @@ export class KurentoRoom {
         return new Stream(this, true, room, options);
     };
 
-    createRoom(options: any) {
+    createRoom(options: RoomOptions) {
         this.room = new Room(this, options);
         return this.room;
     };
 
-    private sendMessage(room: any, user: any, message: string) {
+    private sendMessage(room: string, user: string, message: string) {
         
         this.sendRequest('sendMessage', { message: message, userMessage: user, roomMessage: room }, (error, response) => {
             if (error) {

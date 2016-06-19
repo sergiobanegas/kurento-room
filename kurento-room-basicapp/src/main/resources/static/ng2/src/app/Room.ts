@@ -18,6 +18,7 @@
 import {KurentoRoom} from './KurentoRoom'
 import {Stream} from './Stream'
 import {Participant} from './Participant'
+import {RoomOptions, ParticipantOptions} from './options.model'
 
 declare var EventEmitter: any;
 
@@ -34,7 +35,7 @@ export class Room {
     private thresholdSpeaker: any;
     private ee = new EventEmitter();
 
-    constructor(private kurento: KurentoRoom, private options: any) {
+    constructor(private kurento: KurentoRoom, private options: RoomOptions) {
         
         this.ee = new EventEmitter();
         this.name = options.room;
@@ -42,7 +43,7 @@ export class Room {
         this.updateSpeakerInterval = options.updateSpeakerInterval || 1500;
         this.thresholdSpeaker = options.thresholdSpeaker || -50;
         setInterval(this.updateMainSpeaker.bind(this), this.updateSpeakerInterval);
-        this.localParticipant = new Participant(this.kurento, true, this, { id: this.options.user });
+        this.localParticipant = new Participant(this.kurento, true, this, { id: this.options.user, streams: null });
         this.participants[this.options.user] = this.localParticipant;
     }
 
@@ -72,7 +73,7 @@ export class Room {
         this.ee.addListener(eventName, listener);
     }
 
-    emitEvent(eventName:string, eventsArray:any) {
+    emitEvent(eventName:string, eventsArray:any[]) {
         this.ee.emitEvent(eventName, eventsArray);
     }
 
@@ -125,7 +126,7 @@ export class Room {
         stream.subscribe();
     }
 
-    onParticipantPublished(options:any) {
+    onParticipantPublished(options:ParticipantOptions) {
 
         let participant = new Participant(this.kurento, false, this, options);
         
@@ -154,7 +155,7 @@ export class Room {
         }
     }
 
-    onParticipantJoined(msg:any) {
+    onParticipantJoined(msg: ParticipantOptions) {
         
         let participant = new Participant(this.kurento, false, this, msg);
         let pid = participant.getID();
@@ -292,7 +293,7 @@ export class Room {
         }
     }
 
-    leave(forced:any, jsonRpcClient:any) {
+    leave(forced:boolean, jsonRpcClient:any) {
         
         forced = !!forced;
         console.log("Leaving room (forced=" + forced + ")");
