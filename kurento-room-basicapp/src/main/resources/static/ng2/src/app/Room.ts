@@ -47,6 +47,10 @@ export class Room {
         this.participants[this.options.user] = this.localParticipant;
     }
 
+    getParticipants(){
+        return this.participants[0];
+    }
+
     updateMainSpeaker() {
         
         if (this.participantsSpeaking.length > 0) {

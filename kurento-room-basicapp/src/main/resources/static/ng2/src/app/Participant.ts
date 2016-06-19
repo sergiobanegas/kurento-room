@@ -57,6 +57,10 @@ export class Participant{
         this.id = newId;
     }
 
+    getId() {
+        return this.id;
+    }
+
     addStream(stream: Stream) {
         this.streams[stream.getID()] = stream;
         this.room.getStreams()[stream.getID()] = stream;

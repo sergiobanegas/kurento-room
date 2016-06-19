@@ -71,7 +71,7 @@ export class KurentoRoom {
         }
     }
 
-    private isRoomAvailable() {
+    isRoomAvailable() {
         if (this.room) {
             return true;
         } else {
