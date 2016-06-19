@@ -18,7 +18,7 @@
 import {KurentoRoom} from './KurentoRoom'
 import {Stream} from './Stream'
 import {Participant} from './Participant'
-import {RoomOptions, ParticipantOptions} from './options.model'
+import {RoomOptions, ParticipantOptions, MessageOptions} from './options.model'
 
 declare var EventEmitter: any;
 
@@ -210,7 +210,7 @@ export class Room {
         }]);
     };
 
-    onNewMessage(msg:any) {
+    onNewMessage(msg: MessageOptions) {
         
         console.log("New message: " + JSON.stringify(msg));
         

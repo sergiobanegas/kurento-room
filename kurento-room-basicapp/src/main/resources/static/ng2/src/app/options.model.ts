@@ -20,6 +20,17 @@ export interface StreamOptions {
 }
 
 export interface ParticipantOptions {
-	id: string,
+	id: string;
 	streams: StreamOptions[];
+}
+
+export interface VideoOptions {
+	thumb: string;
+	video: HTMLVideoElement;
+}
+
+export interface MessageOptions {
+	room: string;
+	user: string;
+	message: string;
 }

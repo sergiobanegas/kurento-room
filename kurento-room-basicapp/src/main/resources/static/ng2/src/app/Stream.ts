@@ -26,7 +26,7 @@
 import {KurentoRoom} from './KurentoRoom'
 import {Room} from './Room'
 import {Participant} from './Participant'
-import {StreamOptions} from './options.model'
+import {StreamOptions, VideoOptions} from './options.model'
 
 declare type JQuery = any;
 declare var $: JQuery;
@@ -41,9 +41,9 @@ export class Stream{
     private wrStream:any;
     private wp:any;
     private id:string;
-    private video: any;
-    private videoElements: any[] = [];
-    private elements: any = [];
+    private video: HTMLVideoElement;
+    private videoElements: VideoOptions[] = [];
+    private elements: HTMLDivElement[] = [];
     private participant:Participant;
     private speechEvent:any;
     private recvVideo:any;
@@ -113,7 +113,7 @@ export class Stream{
         $(this.jq('progress-' + spinnerId)).hide();
     }
 
-    playOnlyVideo (parentElement:any, thumbnailId:string) {
+    playOnlyVideo (parentElement:HTMLDivElement, thumbnailId:string) {
         this.video = document.createElement('video');
         this.video.id = 'native-video-' + this.getGlobalID();
         this.video.autoplay = true;
@@ -135,7 +135,7 @@ export class Stream{
         }
 
         if (typeof parentElement === "string") {
-            document.getElementById(parentElement).appendChild(this.video);
+            document.getElementById(parentElement.id).appendChild(this.video);
         } else {
             parentElement.appendChild(this.video);
         }
@@ -384,7 +384,7 @@ export class Stream{
     
     dispose () {
 
-        function disposeElement(element:any) {
+        function disposeElement(element:HTMLElement) {
             if (element && element.parentNode) {
                 element.parentNode.removeChild(element);
             }
