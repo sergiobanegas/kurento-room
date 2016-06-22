@@ -14,15 +14,23 @@ import {ROUTER_DIRECTIVES, Router} from "@angular/router";
 
 export class CallComponent {
         
-	public room = 'ROOM "'+this.kurentoRoomService.getRoomName()+'"';
+	public name = 'ROOM "'+this.kurentoRoomService.getRoomName()+'"';
+
+	public streams: any[]=this.kurentoRoomService.streams;
+	public holaa:number = 10000;
+	public streams2: any[] = [];
 
 	constructor(private kurentoRoomService:KurentoroomService, private router: Router) {
 		if (this.kurentoRoomService.getRoomName()==undefined || this.kurentoRoomService.getUserName()==undefined){
 			this.router.navigate(['/']);
 		}else{
-			this.kurentoRoomService.connect();  
+			this.kurentoRoomService.connect();
 		}      
 	}
+
+	/*hola() {
+		alert(this.streams.length);
+	}*/
 
 	leaveRoom() {
 		this.kurentoRoomService.leaveRoom();

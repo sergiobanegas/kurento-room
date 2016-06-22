@@ -19,6 +19,7 @@
 import { Stream } from './Stream'
 import { Room } from './Room'
 import {RoomOptions } from './options.model'
+import * as k from "./KurentoJsonRpc.d"
 
 declare var RpcBuilder: any;
 
@@ -26,12 +27,15 @@ export class KurentoRoom {
 
     private room: Room;
     private userName: string;
-    private jsonRpcClient: any;
+    private jsonRpcClient: k.JsonRpcClient;
     private rpcParams: any;
     private callback: (error?: string, kurento?: KurentoRoom) => any;
 
     constructor(private wsUri: string) { }
 
+    getRoom(){
+        return this.room;
+    }
     connect(callback: (error?: string, kurento?: KurentoRoom) => any) {
 
         this.callback = callback;
@@ -63,7 +67,7 @@ export class KurentoRoom {
 
     }
 
-    private connectCallback(error: string) {
+    connectCallback(error: string) {
         if (error) {
             this.callback(error);
         } else {
@@ -80,7 +84,7 @@ export class KurentoRoom {
         }
     }
 
-    private disconnectCallback() {
+    disconnectCallback() {
         console.log('Websocket connection lost');
         
         if (this.isRoomAvailable()) {
@@ -90,7 +94,7 @@ export class KurentoRoom {
         }
     }
 
-    private reconnectingCallback() {
+    reconnectingCallback() {
         console.log('Websocket connection lost (reconnecting)');
         
         if (this.isRoomAvailable()) {
@@ -100,59 +104,59 @@ export class KurentoRoom {
         }
     }
 
-    private reconnectedCallback() {
+    reconnectedCallback() {
         console.log('Websocket reconnected');
     }
 
-    private onParticipantJoined(params: any) {
+    onParticipantJoined(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onParticipantJoined(params);
         }
     }
 
-    private onParticipantPublished(params: any) {
+    onParticipantPublished(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onParticipantPublished(params);
         }
     }
 
-    private onParticipantLeft(params: any) {
+    onParticipantLeft(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onParticipantLeft(params);
         }
     }
 
-    private onParticipantEvicted(params: any) {
+    onParticipantEvicted(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onParticipantEvicted(params);
         }
     }
 
-    private onNewMessage(params: any) {
+    onNewMessage(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onNewMessage(params);
         }
     }
 
-    private iceCandidateEvent(params: any) {
+    iceCandidateEvent(params: any) {
         if (this.isRoomAvailable()) {
             this.room.recvIceCandidate(params);
         }
     }
 
-    private onRoomClosed(params: any) {
+    onRoomClosed(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onRoomClosed(params);
         }
     }
 
-    private onMediaError(params: any) {
+   onMediaError(params: any) {
         if (this.isRoomAvailable()) {
             this.room.onMediaError(params);
         }
     }
 
-    private setRpcParams(params: any) {
+    setRpcParams(params: any) {
         this.rpcParams = params;
     }
 
@@ -184,7 +188,7 @@ export class KurentoRoom {
         }
     };
 
-    private disconnectParticipant(stream: Stream) {
+    disconnectParticipant(stream: Stream) {
         if (this.isRoomAvailable()) {
             this.room.disconnect(stream);
         }

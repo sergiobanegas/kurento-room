@@ -33,10 +33,9 @@ export class Room {
     private subscribeToStreams: any;
     private updateSpeakerInterval: any;
     private thresholdSpeaker: any;
-    private ee = new EventEmitter();
+    private ee: any;
 
     constructor(private kurento: KurentoRoom, private options: RoomOptions) {
-        
         this.ee = new EventEmitter();
         this.name = options.room;
         this.subscribeToStreams = options.subscribeToStreams || true;
@@ -48,7 +47,7 @@ export class Room {
     }
 
     getParticipants(){
-        return this.participants[0];
+        return this.participants;
     }
 
     updateMainSpeaker() {

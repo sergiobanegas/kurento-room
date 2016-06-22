@@ -1,11 +1,34 @@
 <div id="container">
 		<div id="wrapper">
 			<div id="room">
-				<h2 [innerHTML]="room"></h2>
+				<h2 [innerHTML]="name"></h2>
 				<div id="myVideo"></div>
-				<div id="participants"></div>
+				<div id="participants">
+					
+				</div>
+
 				<input type="button" id="button-leave" (mouseup)="leaveRoom()"
 					value="Leave room">
 			</div>
 		</div>
 </div>
+<!--
+<div class="participant" *ngFor="let stream of streams" id="stream.getID()">
+	
+</div>
+
+
+<div id="participants">
+	<div *ngFor="let stream of streams" #elem [attr.id]="'video-' + stream.getGlobalID()">
+	id: {{elem.id}}
+	<div class="participant" [attr.id]="stream.getGlobalID()">
+		<div [attr.id]="'name-' + stream.getGlobalID()" class="name">
+			<h1>{{stream.getGlobalID()}}</h1>
+		</div>
+	</div>
+	</div>
+</div>
+
+<button (click)="hola()">a</button>
+{{streams.length}}
+-->

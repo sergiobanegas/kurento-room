@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { KurentoRoom } from './KurentoRoom';
 import { Room } from './Room';
 import { Stream } from './Stream';
+import { Participant } from './Participant';
 
 declare var checkColor: any;
 
@@ -12,6 +13,7 @@ export class KurentoroomService {
 	private room: Room;
 	private roomName: string;
 	private userName: string;
+	public streams: Stream[]=[];
 
 	connect(){
 		this.kurento.connect((error, kurento) => {
@@ -55,17 +57,18 @@ export class KurentoroomService {
 				};
 
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
-
 					localStream.publish();
-
+					this.streams.push(localStream);
 					var streams = roomEvent.streams;
 					for (var stream of streams) {
+						this.streams.push(stream);
 						playVideo(stream);
 					}
 
 				});
 
 				this.room.addEventListener("stream-added", (streamEvent: any) => {
+					this.streams.push(streamEvent.stream);
 					playVideo(streamEvent.stream);
 				});
 
@@ -75,10 +78,10 @@ export class KurentoroomService {
 					if (element !== undefined) {
 						element.parentNode.removeChild(element);
 					}
+
 				});
-
 				playVideo(localStream);
-
+				
 				this.room.connect();
 			});
 			localStream.init();
@@ -132,6 +135,7 @@ export class KurentoroomService {
 				element.parentNode.removeChild(element);
 			}
 		}
+		this.streams = null;
         this.room = null;
 		this.kurento.close();
 	}
