@@ -364,6 +364,16 @@ export class Room {
         return this.streams;
     }
 
+    addStream(stream: Stream){
+        for (let i in this.streams) {
+            if (stream.getID() == this.streams[i].getID()) {
+                this.streams[i] = stream;
+                return;
+            }
+        }
+        this.streams.push(stream);
+    }
+
     addParticipantSpeaking(participantId:string) {
         this.participantsSpeaking.push(participantId);
     }

@@ -51,10 +51,10 @@ export class KurentoroomService {
 					stream.playThumbnail(elementId);
 
 					// Check color
-					let videoTag = document.getElementById("native-" + elementId);
+					/*let videoTag = document.getElementById("native-" + elementId);
 					let userId = stream.getGlobalID();
 					let canvas = document.createElement('CANVAS');
-					checkColor(videoTag, canvas, userId);
+					checkColor(videoTag, canvas, userId);*/
 				};
 
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
@@ -73,7 +73,6 @@ export class KurentoroomService {
 					playVideo(streamEvent.stream);
 				});
 
-				//FIX ME: stream-removed never sent, because all Participants have an empty array of Ste
 				this.room.addEventListener("stream-removed", (streamEvent: any) => {
 					/*var element = document.getElementById("video-"
 						+ streamEvent.stream.getGlobalID());
