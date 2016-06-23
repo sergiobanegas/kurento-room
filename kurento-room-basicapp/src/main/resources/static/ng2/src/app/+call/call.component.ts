@@ -17,8 +17,6 @@ export class CallComponent {
 	public name = 'ROOM "'+this.kurentoRoomService.getRoomName()+'"';
 
 	public streams: any[]=this.kurentoRoomService.streams;
-	public holaa:number = 10000;
-	public streams2: any[] = [];
 
 	constructor(private kurentoRoomService:KurentoroomService, private router: Router) {
 		if (this.kurentoRoomService.getRoomName()==undefined || this.kurentoRoomService.getUserName()==undefined){
@@ -28,13 +26,13 @@ export class CallComponent {
 		}      
 	}
 
-	/*hola() {
-		alert(this.streams.length);
-	}*/
-
 	leaveRoom() {
 		this.kurentoRoomService.leaveRoom();
 		this.router.navigate(['/']);
+	}
+
+	getStreamSrc(stream: Stream) {
+		return URL.createObjectURL(stream.getWrStream());
 	}
 }
 

@@ -13,6 +13,7 @@ export class KurentoroomService {
 	private room: Room;
 	private roomName: string;
 	private userName: string;
+	public localStream: Stream;
 	public streams: Stream[]=[];
 
 	connect(){
@@ -33,13 +34,13 @@ export class KurentoroomService {
 				thresholdSpeaker: null
 			});
 
-			let localStream = kurento.createStream(this.room, {
+			this.localStream = kurento.createStream(this.room, {
 				audio: true,
 				video: true,
 				data: true
 			});
 
-			localStream.addEventListener("access-accepted", () => {
+			this.localStream.addEventListener("access-accepted", () => {
 
 				let playVideo = (stream: Stream) => {
 
@@ -57,8 +58,8 @@ export class KurentoroomService {
 				};
 
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
-					localStream.publish();
-					this.streams.push(localStream);
+					this.localStream.publish();
+					this.streams.push(this.localStream);
 					var streams = roomEvent.streams;
 					for (var stream of streams) {
 						this.streams.push(stream);
@@ -72,19 +73,23 @@ export class KurentoroomService {
 					playVideo(streamEvent.stream);
 				});
 
+				//FIX ME: stream-removed never sent, because all Participants have an empty array of Ste
 				this.room.addEventListener("stream-removed", (streamEvent: any) => {
-					var element = document.getElementById("video-"
+					/*var element = document.getElementById("video-"
 						+ streamEvent.stream.getGlobalID());
 					if (element !== undefined) {
 						element.parentNode.removeChild(element);
+					}*/
+					let index = this.streams.indexOf(streamEvent.stream, 0);
+					if (index > -1) {
+						this.streams.splice(index, 1);
 					}
-
 				});
-				playVideo(localStream);
+				playVideo(this.localStream);
 				
 				this.room.connect();
 			});
-			localStream.init();
+			this.localStream.init();
 		});
 	}
 
@@ -128,13 +133,13 @@ export class KurentoroomService {
 	}
 
 	leaveRoom() {
-		let streams = this.room.getStreams();
+		/*let streams = this.room.getStreams();
 		for (var stream of streams) {
 			let element = document.getElementById("video-" + stream.getGlobalID());
 			if (element) {
 				element.parentNode.removeChild(element);
 			}
-		}
+		}*/
 		this.streams = null;
         this.room = null;
 		this.kurento.close();
