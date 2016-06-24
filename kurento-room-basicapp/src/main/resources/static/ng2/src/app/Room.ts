@@ -142,7 +142,6 @@ export class Room {
         
         //replacing old participant (this one has streams)
         this.participants[pid] = participant;
-
         this.ee.emitEvent('participant-published', [{
             participant: participant
         }]);
@@ -365,13 +364,16 @@ export class Room {
     }
 
     addStream(stream: Stream){
+        let found = false;
         for (let i in this.streams) {
             if (stream.getID() == this.streams[i].getID()) {
                 this.streams[i] = stream;
-                return;
+                found = true;
             }
         }
-        this.streams.push(stream);
+        if (!found){
+           this.streams.push(stream);
+        }
     }
 
     addParticipantSpeaking(participantId:string) {

@@ -5,6 +5,7 @@ import { Stream } from './Stream';
 import { Participant } from './Participant';
 
 declare var checkColor: any;
+declare var getUserMedia: any;
 
 @Injectable()
 export class KurentoroomService {
@@ -60,17 +61,17 @@ export class KurentoroomService {
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
 					this.localStream.publish();
 					this.streams.push(this.localStream);
-					var streams = roomEvent.streams;
+					let streams = roomEvent.streams;
 					for (var stream of streams) {
 						this.streams.push(stream);
-						playVideo(stream);
+						//playVideo(stream);
 					}
 
 				});
 
 				this.room.addEventListener("stream-added", (streamEvent: any) => {
 					this.streams.push(streamEvent.stream);
-					playVideo(streamEvent.stream);
+					//playVideo(streamEvent.stream);
 				});
 
 				this.room.addEventListener("stream-removed", (streamEvent: any) => {
@@ -84,7 +85,7 @@ export class KurentoroomService {
 						this.streams.splice(index, 1);
 					}
 				});
-				playVideo(this.localStream);
+				//playVideo(this.localStream);
 				
 				this.room.connect();
 			});
