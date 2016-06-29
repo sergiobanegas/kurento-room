@@ -19,6 +19,7 @@ import { KurentoRoom } from './KurentoRoom'
 import { Room } from './Room'
 import { Stream } from './Stream'
 import {ParticipantOptions, StreamOptions} from './options.model'
+import {NgZone} from '@angular/core'
 
 export class Participant{
 
@@ -26,7 +27,7 @@ export class Participant{
     private streams: Stream[] = [];
     private streamsOpts: StreamOptions[] = [];
     
-    constructor(private kurento: KurentoRoom,private local: boolean, private room: Room, private options:ParticipantOptions){
+    constructor(private kurento: KurentoRoom,private local: boolean, private room: Room, private options:ParticipantOptions, private zone?: NgZone ){
     
         this.id = this.options.id;
         if (this.options.streams) {
@@ -42,9 +43,13 @@ export class Participant{
                     data: streamOfOptions.data
 
                 }
-                
-                let stream = new Stream(kurento, false, room, streamOpts);
-                this.addStream(stream);
+                if (zone){
+                    let stream = new Stream(kurento, false, room, streamOpts, this.zone);
+                    this.addStream(stream);
+                }else{
+                    let stream = new Stream(kurento, false, room, streamOpts);
+                    this.addStream(stream);
+                }
                 this.streamsOpts.push(streamOpts);
             }
         }

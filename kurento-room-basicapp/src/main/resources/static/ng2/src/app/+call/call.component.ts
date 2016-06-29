@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { KurentoRoom } from '../KurentoRoom'
 import { Room } from '../Room'
 import { Stream } from '../Stream'
@@ -18,11 +18,11 @@ export class CallComponent {
 
 	public streams: any[] = this.kurentoRoomService.streams;
 
-	constructor(private kurentoRoomService:KurentoroomService, private router: Router) {
+	constructor(private kurentoRoomService:KurentoroomService, private router: Router, private zone: NgZone) {
 		if (this.kurentoRoomService.getRoomName()==undefined || this.kurentoRoomService.getUserName()==undefined){
 			this.router.navigate(['/']);
 		}else{
-			this.kurentoRoomService.connect();
+			this.kurentoRoomService.connect(this.zone);
 		}      
 	}
 
@@ -36,7 +36,7 @@ export class CallComponent {
 	}
 
 	change(){
-		alert(this.kurentoRoomService.streams.length);
+		alert(this.kurentoRoomService.streams[1].getID() + "-" + URL.createObjectURL(this.kurentoRoomService.streams[1].getWrStream()) + "," + this.kurentoRoomService.streams[1].getID() + " - " + URL.createObjectURL(this.kurentoRoomService.streams[0].getWrStream()));
 	}
 }
 

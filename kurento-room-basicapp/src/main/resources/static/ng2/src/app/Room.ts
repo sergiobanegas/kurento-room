@@ -19,6 +19,7 @@ import {KurentoRoom} from './KurentoRoom'
 import {Stream} from './Stream'
 import {Participant} from './Participant'
 import {RoomOptions, ParticipantOptions, MessageOptions} from './options.model'
+import {NgZone} from '@angular/core'
 
 declare var EventEmitter: any;
 
@@ -35,14 +36,18 @@ export class Room {
     private thresholdSpeaker: any;
     private ee: any;
 
-    constructor(private kurento: KurentoRoom, private options: RoomOptions) {
+    constructor(private kurento: KurentoRoom, private options: RoomOptions, private zone?: NgZone) {
         this.ee = new EventEmitter();
         this.name = options.room;
         this.subscribeToStreams = options.subscribeToStreams || true;
         this.updateSpeakerInterval = options.updateSpeakerInterval || 1500;
         this.thresholdSpeaker = options.thresholdSpeaker || -50;
         setInterval(this.updateMainSpeaker.bind(this), this.updateSpeakerInterval);
-        this.localParticipant = new Participant(this.kurento, true, this, { id: this.options.user, streams: null });
+        if (zone){
+            this.localParticipant = new Participant(this.kurento, true, this, { id: this.options.user, streams: null }, zone);
+        }else{
+            this.localParticipant = new Participant(this.kurento, true, this, { id: this.options.user, streams: null });
+        }
         this.participants[this.options.user] = this.localParticipant;
     }
 
@@ -103,10 +108,14 @@ export class Room {
                 }
 
                 for (var exParticipant of exParticipants) {
-
-                    let participant = new Participant(this.kurento, false, this,
-                        exParticipant);
-
+                    let participant: Participant;
+                    if (this.zone){
+                        participant = new Participant(this.kurento, false, this,
+                            exParticipant, this.zone);  
+                    }else{
+                        participant = new Participant(this.kurento, false, this,
+                            exParticipant);
+                    }
                     this.participants[participant.getID()] = participant;
 
                     roomEvent.participants.push(participant);
@@ -131,8 +140,14 @@ export class Room {
 
     onParticipantPublished(options:ParticipantOptions) {
 
-        let participant = new Participant(this.kurento, false, this, options);
-        
+        let participant: Participant;
+
+        if (this.zone){
+            participant = new Participant(this.kurento, false, this, options, this.zone);
+        }else{
+            participant = new Participant(this.kurento, false, this, options);
+        }
+       
         let pid = participant.getID(); 
         if (!(pid in this.participants)) {
             console.info("Publisher not found in participants list by its id", pid);
@@ -159,7 +174,13 @@ export class Room {
 
     onParticipantJoined(msg: ParticipantOptions) {
         
-        let participant = new Participant(this.kurento, false, this, msg);
+        let participant: Participant;
+        if (this.zone){
+            participant = new Participant(this.kurento, false, this, msg, this.zone);
+        }else{
+            participant = new Participant(this.kurento, false, this, msg);
+        }
+        
         let pid = participant.getID();
         
         if (!(pid in this.participants)) {

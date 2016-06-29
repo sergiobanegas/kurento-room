@@ -27,6 +27,8 @@ import {KurentoRoom} from './KurentoRoom'
 import {Room} from './Room'
 import {Participant} from './Participant'
 import {StreamOptions, VideoOptions} from './options.model'
+import {NgZone} from '@angular/core';
+
 
 declare type JQuery = any;
 declare var $: JQuery;
@@ -51,12 +53,13 @@ export class Stream{
     private showMyRemote = false;
     private localMirrored = false;
 
-    constructor(private kurento: KurentoRoom, private local:boolean, private room:Room, private options:StreamOptions){
+    constructor(private kurento: KurentoRoom, private local: boolean, private room: Room, private options: StreamOptions, private zone?: NgZone) {
         if (this.options.id) {
             this.id = this.options.id;
         } else {
             this.id = "webcam";
         }
+
         this.participant = this.options.participant;
         this.recvVideo = this.options.recvVideo;
         this.recvAudio= options.recvAudio;
@@ -222,7 +225,14 @@ export class Stream{
                     this.room.emitEvent('stream-published', [{
                         stream: this
 	                }])
-                    this.processSdpAnswer(response.sdpAnswer);
+                    if (this.zone){
+						this.zone.run(() => {
+							this.processSdpAnswer(response.sdpAnswer);
+						}); 
+                    }else{
+						this.processSdpAnswer(response.sdpAnswer);
+                    }
+                    
 	            }
         });
     }
@@ -241,7 +251,13 @@ export class Stream{
             if (error) {
                 console.error("Error on recvVideoFrom: " + JSON.stringify(error));
             } else {
-                this.processSdpAnswer(response.sdpAnswer);
+				if (this.zone) {	
+					this.zone.run(() => {
+						this.processSdpAnswer(response.sdpAnswer);
+					}); 
+				}else{
+					this.processSdpAnswer(response.sdpAnswer);
+				}	
             }
         });
     }

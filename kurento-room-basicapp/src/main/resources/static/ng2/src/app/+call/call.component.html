@@ -2,12 +2,10 @@
 		<div id="wrapper">
 			<div id="room">
 				<h2 [innerHTML]="name"></h2>
-				<!--<div id="participants"></div>-->
-				<div *ngFor="let stream of streams" class="participant" [attr.id]="stream.getGlobalID()">
+				<div id="participants"></div>
+				<div *ngFor="let stream of streams" class="participant">
 							<a [innerHTML]="stream.getGlobalID()"></a>
-							<video *ngIf="stream.getWrStream()" autoplay="true" controls="false">
-								<source [src]="getStreamSrc(stream)"/>
-							</video>
+							<video *ngIf="stream.getWrStream()" autoplay="true" controls="false" [src]="getStreamSrc(stream)"></video>
 							<p>
 								<span *ngIf="!stream.getWrStream()">This video element doesn't have wrStream</span>
 							</p>
@@ -17,5 +15,5 @@
 			</div>
 		</div>
 </div>
-<p>Number of streams: {{streams.length}}</p>
+<!--<p>Number of streams: {{streams.length}}</p>-->
 <button (click)="change()">See real streams length</button>
