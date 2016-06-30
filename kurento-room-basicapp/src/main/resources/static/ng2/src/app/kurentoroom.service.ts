@@ -64,7 +64,6 @@ export class KurentoroomService {
 
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
 					this.localStream.publish();
-					alert("HOLA");
 					this.streams.push(this.localStream);
 					let streams = roomEvent.streams;
 					for (var stream of streams) {

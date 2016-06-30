@@ -121,10 +121,10 @@ export class Room {
                     roomEvent.participants.push(participant);
 
                     let streams = participant.getStreams();
-                    for (var key in streams) {
-                        roomEvent.streams.push(streams[key]);
+                    for (var stream of streams) {
+                        roomEvent.streams.push(stream);
                         if (this.subscribeToStreams) {
-                            streams[key].subscribe();
+                            stream.subscribe();
                         }
                     }
                 }
@@ -162,11 +162,11 @@ export class Room {
         }]);
 
         let streams = participant.getStreams();
-        for (var i in streams) {
+        for (var stream of streams) {
             if (this.subscribeToStreams) {
-                streams[i].subscribe();
+                stream.subscribe();
                 this.ee.emitEvent('stream-added', [{
-                    stream: streams[i]
+                    stream: stream
                 }]);
             }
         }

@@ -4,16 +4,11 @@
 				<h2 [innerHTML]="name"></h2>
 				<div id="participants"></div>
 				<div *ngFor="let stream of streams" class="participant">
-							<a [innerHTML]="stream.getGlobalID()"></a>
-							<video *ngIf="stream.getWrStream()" autoplay="true" controls="false" [src]="getStreamSrc(stream)"></video>
-							<p>
-								<span *ngIf="!stream.getWrStream()">This video element doesn't have wrStream</span>
-							</p>
+					<a [innerHTML]="stream.getGlobalID()"></a>
+					<video autoplay="true" controls="false" [src]="getStreamSrc(stream)"></video>
 				</div>
 				<input type="button" id="button-leave" (click)="leaveRoom()"
 					value="Leave room">
 			</div>
 		</div>
 </div>
-<!--<p>Number of streams: {{streams.length}}</p>-->
-<button (click)="change()">See real streams length</button>

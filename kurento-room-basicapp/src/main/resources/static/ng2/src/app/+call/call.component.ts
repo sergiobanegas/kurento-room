@@ -34,9 +34,5 @@ export class CallComponent {
 	getStreamSrc(stream: Stream) {
 		return URL.createObjectURL(stream.getWrStream());
 	}
-
-	change(){
-		alert(this.kurentoRoomService.streams[1].getID() + "-" + URL.createObjectURL(this.kurentoRoomService.streams[1].getWrStream()) + "," + this.kurentoRoomService.streams[1].getID() + " - " + URL.createObjectURL(this.kurentoRoomService.streams[0].getWrStream()));
-	}
 }
 

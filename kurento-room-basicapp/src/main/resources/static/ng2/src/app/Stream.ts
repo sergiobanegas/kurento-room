@@ -85,7 +85,10 @@ export class Stream{
     	this.showMyRemote = true;
     	this.localMirrored = true;
     	if (wr)
-    		this.wrStream = wr;
+            this.zone.runOutsideAngular(()=>{
+                this.wrStream = wr;
+            })
+    		
     }
 
     isLocalMirrored() {
@@ -200,8 +203,10 @@ export class Stream{
         };
         
         getUserMedia(constraints, (userStream)=> {
-            this.wrStream = userStream;
-            this.ee.emitEvent('access-accepted', null);
+            this.zone.runOutsideAngular(()=>{
+                this.wrStream = userStream;
+                this.ee.emitEvent('access-accepted', null);
+            });
         }, (error) => {
             console.error("Access denied", error);
             this.ee.emitEvent('access-denied', null);
@@ -226,7 +231,7 @@ export class Stream{
                         stream: this
 	                }])
                     if (this.zone){
-						this.zone.run(() => {
+						this.zone.runOutsideAngular(() => {
 							this.processSdpAnswer(response.sdpAnswer);
 						}); 
                     }else{
@@ -252,7 +257,7 @@ export class Stream{
                 console.error("Error on recvVideoFrom: " + JSON.stringify(error));
             } else {
 				if (this.zone) {	
-					this.zone.run(() => {
+					this.zone.runOutsideAngular(() => {
 						this.processSdpAnswer(response.sdpAnswer);
 					}); 
 				}else{
