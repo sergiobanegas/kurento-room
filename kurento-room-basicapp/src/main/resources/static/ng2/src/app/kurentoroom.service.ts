@@ -18,7 +18,7 @@ export class KurentoroomService {
 	public streams: Stream[]=[];
 	private zone: NgZone;
 
-	constructor() { };
+	constructor() { }
 
 	connect(zone: NgZone){
 		this.zone = zone;

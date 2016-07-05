@@ -14,7 +14,6 @@ export class RoomStreamComponent {
   @Input()
   stream: Stream;
 
-
   @Input()
   src:SafeUrl;
 

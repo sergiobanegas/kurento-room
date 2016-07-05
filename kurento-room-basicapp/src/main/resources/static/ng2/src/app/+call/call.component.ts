@@ -37,7 +37,7 @@ export class CallComponent {
 
 	getStreamSrc(stream: Stream) {
 		if (stream.src != undefined){
-				return this.sanitizer.bypassSecurityTrustUrl(stream.src);
+			return this.sanitizer.bypassSecurityTrustUrl(stream.src);
 		}
 	}
 }

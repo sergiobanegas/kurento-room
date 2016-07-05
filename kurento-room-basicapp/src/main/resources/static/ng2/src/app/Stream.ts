@@ -86,10 +86,7 @@ export class Stream{
     	this.showMyRemote = true;
     	this.localMirrored = true;
     	if (wr)
-            this.zone.runOutsideAngular(()=>{
-                this.wrStream = wr;
-            })
-    		
+            this.wrStream = wr;    		
     }
 
     isLocalMirrored() {
@@ -232,13 +229,7 @@ export class Stream{
                     this.room.emitEvent('stream-published', [{
                         stream: this
 	                }])
-                    if (this.zone){
-						this.zone.run(() => {
-							this.processSdpAnswer(response.sdpAnswer);
-						}); 
-                    }else{
-						this.processSdpAnswer(response.sdpAnswer);
-                    }
+					this.processSdpAnswer(response.sdpAnswer);
 	            }
         });
     }
@@ -257,13 +248,7 @@ export class Stream{
             if (error) {
                 console.error("Error on recvVideoFrom: " + JSON.stringify(error));
             } else {
-				if (this.zone) {	
-					this.zone.runOutsideAngular(() => {
-						this.processSdpAnswer(response.sdpAnswer);
-					}); 
-				}else{
-					this.processSdpAnswer(response.sdpAnswer);
-				}	
+				this.processSdpAnswer(response.sdpAnswer);
             }
         });
     }
@@ -351,9 +336,6 @@ export class Stream{
                 console.log("Peer remote stream", this.wrStream);
                 if (this.wrStream != undefined) {
                     this.src=URL.createObjectURL(this.wrStream);
-                    this.room.emitEvent('src-set', [{
-                        stream: this
-                    }])
                     this.speechEvent = kurentoUtils.WebRtcPeer.hark(this.wrStream, { threshold: this.room.getThresholdSpeaker() });
                     this.speechEvent.on('speaking', () => {
                         this.room.addParticipantSpeaking(participantId);
