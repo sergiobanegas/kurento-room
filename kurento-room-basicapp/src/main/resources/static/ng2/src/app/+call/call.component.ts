@@ -5,12 +5,15 @@ import { Room } from '../Room'
 import { Stream } from '../Stream'
 import { KurentoroomService } from '../kurentoroom.service'
 import {ROUTER_DIRECTIVES, Router} from "@angular/router";
+import {RoomStreamComponent} from './roomstream.component';
+
 
 @Component({
 	moduleId: module.id,
 	selector: 'call',
 	templateUrl: 'call.component.html',
-	styleUrls: ['call.component.css']
+	styleUrls: ['call.component.css'],
+	directives: [RoomStreamComponent]
 })
 
 export class CallComponent {
@@ -34,9 +37,7 @@ export class CallComponent {
 
 	getStreamSrc(stream: Stream) {
 		if (stream.src != undefined){
-				let url=this.sanitizer.bypassSecurityTrustUrl(stream.src);
-				console.log(url);
-					return url;
+				return this.sanitizer.bypassSecurityTrustUrl(stream.src);
 		}
 	}
 }

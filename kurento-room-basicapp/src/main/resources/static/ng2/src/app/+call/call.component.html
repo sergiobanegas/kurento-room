@@ -2,13 +2,8 @@
 		<div id="wrapper">
 			<div id="room">
 				<h2 [innerHTML]="name"></h2>
-				<div id="participants"></div>
-				<div *ngFor="let stream of streams" class="participant">
-					<a [innerHTML]="stream.getGlobalID()"></a>
-					<video autoplay="true" controls="false" [src]="getStreamSrc(stream)"></video>
-				</div>
-				<input type="button" id="button-leave" (click)="leaveRoom()"
-					value="Leave room">
+				<roomstream class="participant" *ngFor="let stream of streams" [stream]="stream" [src]=getStreamSrc(stream)></roomstream>
+				<input type="button" id="button-leave" (click)="leaveRoom()" value="Leave room">
 			</div>
 		</div>
 </div>

@@ -239,7 +239,6 @@ export class Stream{
                     }else{
 						this.processSdpAnswer(response.sdpAnswer);
                     }
-                    
 	            }
         });
     }
@@ -352,6 +351,9 @@ export class Stream{
                 console.log("Peer remote stream", this.wrStream);
                 if (this.wrStream != undefined) {
                     this.src=URL.createObjectURL(this.wrStream);
+                    this.room.emitEvent('src-set', [{
+                        stream: this
+                    }])
                     this.speechEvent = kurentoUtils.WebRtcPeer.hark(this.wrStream, { threshold: this.room.getThresholdSpeaker() });
                     this.speechEvent.on('speaking', () => {
                         this.room.addParticipantSpeaking(participantId);
