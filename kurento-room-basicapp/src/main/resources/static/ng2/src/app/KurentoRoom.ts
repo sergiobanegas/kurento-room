@@ -18,7 +18,7 @@
 
 import { Stream } from './Stream'
 import { Room } from './Room'
-import {RoomOptions } from './options.model'
+import {RoomOptions, ParticipantOptions, MessageOptions, StreamOptions } from './options.model'
 import {NgZone} from '@angular/core'
 import * as k from "./KurentoJsonRpc.d"
 
@@ -109,13 +109,13 @@ export class KurentoRoom {
         console.log('Websocket reconnected');
     }
 
-    onParticipantJoined(params: any) {
+    onParticipantJoined(params: ParticipantOptions) {
         if (this.isRoomAvailable()) {
             this.room.onParticipantJoined(params);
         }
     }
 
-    onParticipantPublished(params: any) {
+    onParticipantPublished(params: ParticipantOptions) {
         if (this.isRoomAvailable()) {
             this.room.onParticipantPublished(params);
         }
@@ -133,7 +133,7 @@ export class KurentoRoom {
         }
     }
 
-    onNewMessage(params: any) {
+    onNewMessage(params: MessageOptions) {
         if (this.isRoomAvailable()) {
             this.room.onNewMessage(params);
         }
@@ -161,7 +161,7 @@ export class KurentoRoom {
         this.rpcParams = params;
     }
 
-    sendRequest(method: string, params: any, callback?: any) {
+    sendRequest(method: string, params: any, callback?: Function) {
         
         if (params && params instanceof Function) {
             callback = params;
@@ -195,7 +195,7 @@ export class KurentoRoom {
         }
     }
 
-    createStream(room: Room, options: any, zone?: NgZone) {
+    createStream(room: Room, options: StreamOptions, zone?: NgZone) {
         options.participant = room.getLocalParticipant();
         return new Stream(this, true, room, options, zone);
     };
@@ -214,7 +214,7 @@ export class KurentoRoom {
         });
     };
 
-    private sendCustomRequest(params: any, callback: any) {
+    private sendCustomRequest(params: any, callback: Function) {
         this.sendRequest('customRequest', params, callback);
     };
 }

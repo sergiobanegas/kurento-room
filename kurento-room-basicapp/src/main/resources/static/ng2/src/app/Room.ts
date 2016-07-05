@@ -77,7 +77,7 @@ export class Room {
         return this.getThresholdSpeaker;
     }
 
-    addEventListener (eventName:string, listener:any) {
+    addEventListener (eventName:string, listener:Function) {
         this.ee.addListener(eventName, listener);
     }
 

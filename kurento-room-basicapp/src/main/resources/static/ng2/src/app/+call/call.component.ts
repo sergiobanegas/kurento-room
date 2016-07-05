@@ -23,7 +23,7 @@ export class CallComponent {
 	public streams: Stream[] = this.kurentoRoomService.streams;
 
 	constructor(private kurentoRoomService:KurentoroomService, private router: Router, private zone: NgZone, private  sanitizer: DomSanitizationService) {
-		if (this.kurentoRoomService.getRoomName()==undefined || this.kurentoRoomService.getUserName()==undefined){
+		if (this.kurentoRoomService.getRoomName()==undefined){
 			this.router.navigate(['/']);
 		}else{
 			this.kurentoRoomService.connect(this.zone);

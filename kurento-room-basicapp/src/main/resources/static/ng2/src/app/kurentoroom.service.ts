@@ -73,11 +73,6 @@ export class KurentoroomService {
 		});
 	}
 
-
-	getKurento() {
-		return this.kurento;
-	}
-
 	getRoom() {
 		return this.room;
 	}
@@ -90,26 +85,9 @@ export class KurentoroomService {
 		return this.userName;
 	}
 
-	setKurento(kurento: KurentoRoom) {
-		this.kurento = kurento;
-	}
-
-	setRoomName(roomName: string){
-		this.roomName = roomName;
-	}
-
-	setUserName(userName: string){
-		this.userName = userName;
-	}
-
-
-	isAvailable(){
-		if (!this.kurento){
-			return false;
-		}else{
-			return this.kurento.isRoomAvailable();
-		}
-		
+	configureService(userName:string, roomName: string){
+		this.userName=userName;
+		this.roomName=roomName;
 	}
 
 	leaveRoom() {

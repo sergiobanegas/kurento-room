@@ -101,7 +101,7 @@ export class Stream{
         return this.wp;
     }
 
-    addEventListener (eventName:string, listener:any) {
+    addEventListener (eventName:string, listener:Function) {
         this.ee.addListener(eventName, listener);
     }
 

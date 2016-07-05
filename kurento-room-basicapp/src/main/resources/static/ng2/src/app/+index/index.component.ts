@@ -17,9 +17,7 @@ export class IndexComponent {
 	constructor(private kurentoRoomService: KurentoroomService, private router: Router) { }
 
 	register(userId: string, roomId: string) {
-		
-		this.kurentoRoomService.setUserName(userId);
-		this.kurentoRoomService.setRoomName(roomId);
+		this.kurentoRoomService.configureService(userId, roomId);
 		this.router.navigate(['/call']);
 	}
 }
