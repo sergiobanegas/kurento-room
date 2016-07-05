@@ -41,6 +41,7 @@ export class Stream{
     private ee = new EventEmitter();
     private sdpOffer:string;
     private wrStream:any;
+    public src: string;
     private wp:any;
     private id:string;
     private video: HTMLVideoElement;
@@ -203,8 +204,9 @@ export class Stream{
         };
         
         getUserMedia(constraints, (userStream)=> {
-            this.zone.runOutsideAngular(()=>{
+            this.zone.run(()=>{
                 this.wrStream = userStream;
+                this.src=URL.createObjectURL(this.wrStream);
                 this.ee.emitEvent('access-accepted', null);
             });
         }, (error) => {
@@ -231,7 +233,7 @@ export class Stream{
                         stream: this
 	                }])
                     if (this.zone){
-						this.zone.runOutsideAngular(() => {
+						this.zone.run(() => {
 							this.processSdpAnswer(response.sdpAnswer);
 						}); 
                     }else{
@@ -342,13 +344,14 @@ export class Stream{
         		sdpAnswer);
         let participantId = this.getGlobalID();
         let pc = this.wp.peerConnection;
-        pc.setRemoteDescription(answer, () => {
+        pc.setRemoteDescription(answer, () => this.zone.run(() => {
             // Avoids to subscribe to your own stream remotely 
         	// except when showMyRemote is true
             if (!this.local || this.displayMyRemote()) {
                 this.wrStream = pc.getRemoteStreams()[0];
                 console.log("Peer remote stream", this.wrStream);
                 if (this.wrStream != undefined) {
+                    this.src=URL.createObjectURL(this.wrStream);
                     this.speechEvent = kurentoUtils.WebRtcPeer.hark(this.wrStream, { threshold: this.room.getThresholdSpeaker() });
                     this.speechEvent.on('speaking', () => {
                         this.room.addParticipantSpeaking(participantId);
@@ -379,7 +382,7 @@ export class Stream{
                     stream: this
                     }]);
             }
-        }, (error) => {
+        }), (error) => {
             console.error(this.getGlobalID() + ": Error setting SDP to the peer connection: "
             		+ JSON.stringify(error));
         });
