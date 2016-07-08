@@ -42,7 +42,11 @@ export class KurentoroomService {
 			this.localStream = kurento.createStream(this.room, {
 				audio: true,
 				video: true,
-				data: true
+				data: true,
+				recvVideo: null,
+				participant: null,
+				id: null,
+				recvAudio: null
 			}, this.zone);
 
 			this.localStream.addEventListener("access-accepted", () => {

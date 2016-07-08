@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Stream } from '../Stream'
 import { Room } from '../Room'
 import {DomSanitizationService, SafeUrl} from '@angular/platform-browser';
@@ -14,14 +14,14 @@ export class RoomStreamComponent {
   @Input()
   stream: Stream;
 
-  @Input()
-  src:SafeUrl;
+  public src:SafeUrl;
 
-  constructor(private sanitizer: DomSanitizationService){
-	}
+  constructor(private sanitizer: DomSanitizationService, private zone:NgZone){}
 
   ngOnInit(){  
+		this.stream.addEventListener('src-added', (streamEvent:any) => {
+			this.src=this.sanitizer.bypassSecurityTrustUrl(this.stream.src);
+		});
   }
-
 
 }

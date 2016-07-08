@@ -2,7 +2,7 @@
 		<div id="wrapper">
 			<div id="room">
 				<h2 [innerHTML]="name"></h2>
-				<roomstream class="participant" *ngFor="let stream of streams" [stream]="stream" [src]=getStreamSrc(stream)></roomstream>
+				<roomstream class="participant" *ngFor="let stream of streams" [stream]="stream" ></roomstream>
 				<input type="button" id="button-leave" (click)="leaveRoom()" value="Leave room">
 			</div>
 		</div>
