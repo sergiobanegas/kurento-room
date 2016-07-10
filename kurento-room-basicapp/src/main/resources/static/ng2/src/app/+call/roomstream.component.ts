@@ -1,27 +1,27 @@
-import { Component, OnInit, Input, NgZone } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Stream } from '../Stream'
 import { Room } from '../Room'
 import {DomSanitizationService, SafeUrl} from '@angular/platform-browser';
 import { KurentoroomService } from '../kurentoroom.service'
 
 @Component({
-  moduleId: module.id,
-  selector: 'roomstream',
-  templateUrl: 'roomstream.component.html'
+	moduleId: module.id,
+	selector: 'roomstream',
+	templateUrl: 'roomstream.component.html'
 })
 export class RoomStreamComponent {
 
-  @Input()
-  stream: Stream;
+	@Input()
+	stream: Stream;
 
-  public src:SafeUrl;
+	public src:SafeUrl;
 
-  constructor(private sanitizer: DomSanitizationService, private zone:NgZone){}
+	constructor(private sanitizer: DomSanitizationService){}
 
-  ngOnInit(){  
-		this.stream.addEventListener('src-added', (streamEvent:any) => {
-			this.src=this.sanitizer.bypassSecurityTrustUrl(this.stream.src);
+	ngOnInit(){  
+		this.stream.addEventListener('src-added', () => {
+			this.src=this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(this.stream.getWrStream()));
 		});
-  }
+	}
 
 }

@@ -19,7 +19,6 @@
 import { Stream } from './Stream'
 import { Room } from './Room'
 import {RoomOptions, ParticipantOptions, MessageOptions, StreamOptions } from './options.model'
-import {NgZone} from '@angular/core'
 import * as k from "./KurentoJsonRpc.d"
 
 declare var RpcBuilder: any;
@@ -195,13 +194,13 @@ export class KurentoRoom {
         }
     }
 
-    createStream(room: Room, options: StreamOptions, zone?: NgZone) {
+    createStream(room: Room, options: StreamOptions) {
         options.participant = room.getLocalParticipant();
-        return new Stream(this, true, room, options, zone);
+        return new Stream(this, true, room, options);
     };
 
-    createRoom(options: RoomOptions, zone?: NgZone) {
-        this.room = new Room(this, options, zone);
+    createRoom(options: RoomOptions) {
+        this.room = new Room(this, options);
         return this.room;
     };
 

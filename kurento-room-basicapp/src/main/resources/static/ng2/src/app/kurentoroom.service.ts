@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { KurentoRoom } from './KurentoRoom';
 import { Room } from './Room';
 import { Stream } from './Stream';
@@ -14,14 +14,11 @@ export class KurentoroomService {
 	private room: Room;
 	private roomName: string;
 	private userName: string;
-	public localStream: Stream;
 	public streams: Stream[]=[];
-	private zone: NgZone;
 
 	constructor() { }
 
-	connect(zone: NgZone){
-		this.zone = zone;
+	connect(){
 		this.kurento.connect((error, kurento) => {
 
 			if (error)
@@ -37,9 +34,9 @@ export class KurentoroomService {
 				subscribeToStreams: true,
 				updateSpeakerInterval: null,
 				thresholdSpeaker: null,
-			}, this.zone);
+			});
 
-			this.localStream = kurento.createStream(this.room, {
+			let localStream = kurento.createStream(this.room, {
 				audio: true,
 				video: true,
 				data: true,
@@ -47,13 +44,12 @@ export class KurentoroomService {
 				participant: null,
 				id: null,
 				recvAudio: null
-			}, this.zone);
+			});
 
-			this.localStream.addEventListener("access-accepted", () => {
-
+			localStream.addEventListener("access-accepted", () => {
 				this.room.addEventListener("room-connected", (roomEvent: any) => {
-					this.localStream.publish();
-					this.streams.push(this.localStream);
+					localStream.publish();
+					this.streams.push(localStream);
 					let streams = roomEvent.streams;
 					for (var stream of streams) {
 						this.streams.push(stream);
@@ -73,7 +69,7 @@ export class KurentoroomService {
 				
 				this.room.connect();
 			});
-			this.localStream.init();
+			localStream.init();
 		});
 	}
 
@@ -95,8 +91,7 @@ export class KurentoroomService {
 	}
 
 	leaveRoom() {
-		this.streams = null;
-        this.room = null;
+		this.streams = [];
 		this.kurento.close();
 	}
 

@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import {DomSanitizationService} from '@angular/platform-browser';
 import { KurentoRoom } from '../KurentoRoom'
 import { Room } from '../Room'
@@ -22,11 +22,11 @@ export class CallComponent {
 
 	public streams: Stream[] = this.kurentoRoomService.streams;
 
-	constructor(private kurentoRoomService:KurentoroomService, private router: Router, private zone: NgZone, private  sanitizer: DomSanitizationService) {
+	constructor(private kurentoRoomService:KurentoroomService, private router: Router, private sanitizer: DomSanitizationService) {
 		if (this.kurentoRoomService.getRoomName()==undefined){
 			this.router.navigate(['/']);
 		}else{
-			this.kurentoRoomService.connect(this.zone);
+			this.kurentoRoomService.connect();
 		}      
 	}
 
@@ -35,10 +35,5 @@ export class CallComponent {
 		this.router.navigate(['/']);
 	}
 
-	getStreamSrc(stream: Stream) {
-		if (stream.src != undefined){
-			return this.sanitizer.bypassSecurityTrustUrl(stream.src);
-		}
-	}
 }
 

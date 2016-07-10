@@ -27,8 +27,6 @@ import {KurentoRoom} from './KurentoRoom'
 import {Room} from './Room'
 import {Participant} from './Participant'
 import {StreamOptions, VideoOptions} from './options.model'
-import {NgZone} from '@angular/core';
-
 
 declare type JQuery = any;
 declare var $: JQuery;
@@ -41,7 +39,6 @@ export class Stream{
     private ee = new EventEmitter();
     private sdpOffer:string;
     private wrStream:any;
-    public src: string;
     private wp:any;
     private id:string;
     private video: HTMLVideoElement;
@@ -54,7 +51,7 @@ export class Stream{
     private showMyRemote = false;
     private localMirrored = false;
 
-    constructor(private kurento: KurentoRoom, private local: boolean, private room: Room, private options: StreamOptions, private zone?: NgZone) {
+    constructor(private kurento: KurentoRoom, private local: boolean, private room: Room, private options: StreamOptions) {
         if (this.options.id) {
             this.id = this.options.id;
         } else {
@@ -87,11 +84,6 @@ export class Stream{
     	this.localMirrored = true;
     	if (wr)
             this.wrStream = wr;
-            this.src=URL.createObjectURL(this.wrStream);
-            this.ee.emitEvent('src-added', {
-                    stream: this
-                });
-
     }
 
     isLocalMirrored() {
@@ -206,14 +198,8 @@ export class Stream{
         };
         
         getUserMedia(constraints, (userStream)=> {
-            this.zone.run(()=>{
                 this.wrStream = userStream;
-                this.src=URL.createObjectURL(this.wrStream);
-                this.ee.emitEvent('src-added', {
-                    stream: this
-                });
                 this.ee.emitEvent('access-accepted', null);
-            });
         }, (error) => {
             console.error("Access denied", error);
             this.ee.emitEvent('access-denied', null);
@@ -240,6 +226,8 @@ export class Stream{
 					this.processSdpAnswer(response.sdpAnswer);
 	            }
         });
+        this.ee.emitEvent('src-added', null);
+
     }
     
     startVideoCallback(error: string, sdpOfferParam: string, wp: any) {
@@ -336,17 +324,14 @@ export class Stream{
         		sdpAnswer);
         let participantId = this.getGlobalID();
         let pc = this.wp.peerConnection;
-        pc.setRemoteDescription(answer, () => this.zone.run(() => {
+        pc.setRemoteDescription(answer, () => {
             // Avoids to subscribe to your own stream remotely 
         	// except when showMyRemote is true
             if (!this.local || this.displayMyRemote()) {
                 this.wrStream = pc.getRemoteStreams()[0];
                 console.log("Peer remote stream", this.wrStream);
                 if (this.wrStream != undefined) {
-                    this.src=URL.createObjectURL(this.wrStream);
-                    this.ee.emitEvent('src-added', {
-                        stream: this
-                    });
+                    this.ee.emitEvent('src-added', null);
                     this.speechEvent = kurentoUtils.WebRtcPeer.hark(this.wrStream, { threshold: this.room.getThresholdSpeaker() });
                     this.speechEvent.on('speaking', () => {
                         this.room.addParticipantSpeaking(participantId);
@@ -377,7 +362,7 @@ export class Stream{
                     stream: this
                     }]);
             }
-        }), (error) => {
+        }, (error) => {
             console.error(this.getGlobalID() + ": Error setting SDP to the peer connection: "
             		+ JSON.stringify(error));
         });
