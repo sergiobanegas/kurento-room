@@ -1,20 +1,19 @@
-
 <div class="join">
     <div id="join-title">Kurento Room</div>
 
     <div class="card" id="join">
-        <form role="form" #f="ngForm" (ngSubmit)="register(userName.value, roomName.value); userName.value='';roomName.value=''" accept-charset="UTF-8">
+        <form role="form" #f="ngForm" (ngSubmit)="register()" accept-charset="UTF-8">
 
             <div class="card__content">
                 <lx-text-field label="Username">
-                    <input type="text" id="name" #userName required>
+                    <input type="text" id="name" [(ngModel)]="userName" required>
                 </lx-text-field>
 
                 <div class="grid">
 
                     <div class="grid__col6">
                         <lx-text-field label="Room">
-                            <input type="text" id="roomName" #roomName required>
+                            <input type="text" id="roomName" [(ngModel)]="roomName" required>
                         </lx-text-field>
                     </div>
 
@@ -52,4 +51,3 @@
 
 
 </div>
-

@@ -26,10 +26,10 @@ export class Room {
     
     private name:string;
     private streams: Stream[] = [];
-    private participants: Participant[] = [];
+    private participants: any[] = [];
     private participantsSpeaking: string[] = [];
     private connected = false;
-    private localParticipant: Participant;
+    private localParticipant: any;
     private subscribeToStreams: any;
     private updateSpeakerInterval: any;
     private thresholdSpeaker: any;

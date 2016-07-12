@@ -15,98 +15,26 @@
  *
  */
 
-import {KurentoRoom} from './KurentoRoom'
-import {Room} from './Room'
-import {Participant} from './Participant'
-import {Stream} from './Stream'
-import {StreamOptions, VideoOptions} from './options.model'
+import { KurentoRoom } from './KurentoRoom'
+import { Room } from './Room'
+import { Participant } from './Participant'
+import { AppParticipant } from './AppParticipant'
+import { Stream } from './Stream'
+import { StreamOptions, VideoOptions } from './options.model'
 
 declare var $;
 
-export class AppParticipant {
-
-    public videoElement: any;
-    private thumbnailId:any
-    
-    constructor(private stream: Stream){
-        this.playVideo();
-    }
-
-    getStream() {
-		return this.stream;
-	}
-
-    setMain () {
-
-        let mainVideo = document.getElementById("main-video");
-        let oldVideo = mainVideo.firstChild;
-
-        this.stream.playOnlyVideo("main-video", this.thumbnailId);
-
-        this.videoElement.className += " active-video";
-
-        if (oldVideo !== null) {
-            mainVideo.removeChild(oldVideo);
-        }
-    }
-
-    removeMain() {
-        $(this.videoElement).removeClass("active-video");
-    }
-
-    remove () {
-        if (this.videoElement !== undefined) {
-            if (this.videoElement.parentNode !== null) {
-                this.videoElement.parentNode.removeChild(this.videoElement);
-            }
-        }
-    }
-
-    playVideo() {
-
-        this.thumbnailId = "video-" + this.stream.getGlobalID();
-
-        this.videoElement = document.createElement('div');
-        this.videoElement.setAttribute("id", this.thumbnailId);
-        this.videoElement.className = "video";
-
-        let buttonVideo = document.createElement('button');
-        buttonVideo.className = 'action btn btn--m btn--orange btn--fab mdi md-desktop-mac';
-        //FIXME this won't work, Angular can't get to bind the directive ng-click nor lx-ripple
-        buttonVideo.setAttribute("ng-click", "disconnectStream();$event.stopPropagation();");
-        buttonVideo.setAttribute("lx-ripple", "");
-        buttonVideo.style.position = "absolute";
-        buttonVideo.style.left = "75%";
-        buttonVideo.style.top = "60%";
-        buttonVideo.style.zIndex = "100";
-        this.videoElement.appendChild(buttonVideo);
-        
-        let speakerSpeakingVolumen = document.createElement('div');
-        speakerSpeakingVolumen.setAttribute("id","speaker" + this.thumbnailId);
-        speakerSpeakingVolumen.className = 'btn--m btn--green btn--fab mdi md-volume-up blinking';
-        speakerSpeakingVolumen.style.position = "absolute";
-        speakerSpeakingVolumen.style.left = "3%";
-        speakerSpeakingVolumen.style.top = "60%";
-        speakerSpeakingVolumen.style.zIndex = "100";
-        speakerSpeakingVolumen.style.display = "none";
-        this.videoElement.appendChild(speakerSpeakingVolumen);
-
-        document.getElementById("participants").appendChild(this.videoElement);
-        this.stream.playThumbnail(this.thumbnailId);
-    }
-}
-
 export class Participants{
 
-    private mainParticipant;
-    private localParticipant;
-    private mirrorParticipant;
-    private participants = [];
-    private roomName;
-    private connected = true;
-    private displayingRelogin = false;
-    private mainSpeaker = true;
-    private room;
+    private mainParticipant:any;
+    private localParticipant:any;
+    private mirrorParticipant:any;
+    private participants: any[] = [];
+    private roomName:string;
+    private connected:boolean = true;
+    private displayingRelogin:boolean = false;
+    private mainSpeaker:boolean = true;
+    private room:any;
 
     constructor(){}
     
@@ -121,8 +49,8 @@ export class Participants{
     };
 
     getMainParticipant() {
-		return this.mainParticipant;
-	}
+        return this.mainParticipant;
+    }
     
     updateVideoStyle() {
         let MAX_WIDTH = 14;
@@ -155,8 +83,8 @@ export class Participants{
     };
 
     addLocalMirror (stream: any) {
-		this.mirrorParticipant = this.addParticipant(stream);
-	};
+        this.mirrorParticipant = this.addParticipant(stream);
+    };
     
     addParticipant (stream: any) {
 
@@ -211,22 +139,22 @@ export class Participants{
         			mainIsLocal = true;
         		} else {
         			this.localParticipant = null;
-                	this.mirrorParticipant = null;
-        		}
-        	}
-        	if (!mainIsLocal) {
-        		let keys = Object.keys(this.participants);
-        		if (keys.length > 0) {
-        			this.mainParticipant = this.participants[keys[0]];
-        		} else {
-        			this.mainParticipant = null;
-        		}
-        	}
-        	if (this.mainParticipant) {
-        		this.mainParticipant.setMain();
-        		console.log("Main video from " + this.mainParticipant.getStream().getGlobalID());
-        	} else
-        		console.error("No media streams left to display");
+                    this.mirrorParticipant = null;
+                }
+            }
+            if (!mainIsLocal) {
+                let keys = Object.keys(this.participants);
+                if (keys.length > 0) {
+                    this.mainParticipant = this.participants[keys[0]];
+                } else {
+                    this.mainParticipant = null;
+                }
+            }
+            if (this.mainParticipant) {
+                this.mainParticipant.setMain();
+                console.log("Main video from " + this.mainParticipant.getStream().getGlobalID());
+            } else
+            console.error("No media streams left to display");
         }
 
         this.updateVideoStyle();
@@ -342,9 +270,9 @@ export class Participants{
 //                        </div>
 //                    </li>
         }
-        
+
         if (updateScroll) {
-        	chatDiv.scrollTop = messages.outerHeight();
+            chatDiv.scrollTop = messages.outerHeight();
         }
     };
 
@@ -352,61 +280,61 @@ export class Participants{
         if (this.displayingRelogin) {
             console.warn('Already displaying an alert that leads to relogin');
             return false;
-          }
+        }
         this.displayingRelogin = true;
         this.removeParticipants();
         LxNotificationService.alert('Error!', e.error.message, 'Reconnect', (answer: any) => {
-        	this.displayingRelogin = false;
+            this.displayingRelogin = false;
             $window.location.href = '/';
         });
     };
-    
+
     forceClose ($window:any, LxNotificationService:any, msg:any) {
         if (this.displayingRelogin) {
             console.warn('Already displaying an alert that leads to relogin');
             return false;
-          }
+        }
         this.displayingRelogin = true;
         this.removeParticipants();
         LxNotificationService.alert('Warning!', msg, 'Reload', (answer:any) => {
-        	this.displayingRelogin = false;
+            this.displayingRelogin = false;
             $window.location.href = '/';
         });
     };
-    
+
     alertMediaError ($window: any, LxNotificationService: any, msg:any, callback: any) {
         if (this.displayingRelogin) {
             console.warn('Already displaying an alert that leads to relogin');
             return false;
-          }
-    	LxNotificationService.confirm('Warning!', 'Server media error: ' + msg
-    			+ ". Please reconnect.", { cancel:'Disagree', ok:'Agree' }, 
-    			(answer: any) => {
-    	            console.log("User agrees upon media error: " + answer);
-    	            if (answer) {
-    	            	this.removeParticipants();
-    	                $window.location.href = '/';
-    	            }
-    	            if (typeof callback === "function") {
-    	            	callback(answer);
-    	            }
-    			});
-	};
+        }
+        LxNotificationService.confirm('Warning!', 'Server media error: ' + msg
+            + ". Please reconnect.", { cancel:'Disagree', ok:'Agree' }, 
+            (answer: any) => {
+                console.log("User agrees upon media error: " + answer);
+                if (answer) {
+                    this.removeParticipants();
+                    $window.location.href = '/';
+                }
+                if (typeof callback === "function") {
+                    callback(answer);
+                }
+            });
+    };
 
     streamSpeaking (participantId: any) {
-    	if (this.participants[participantId.participantId] != undefined)
-    		document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display='';
+        if (this.participants[participantId.participantId] != undefined)
+            document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display='';
     }
 
     streamStoppedSpeaking (participantId: any) {
-    	if (this.participants[participantId.participantId] != undefined)
-    		document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display = "none";
+        if (this.participants[participantId.participantId] != undefined)
+            document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display = "none";
     }
 
     updateMainSpeaker(participantId: any) {
-    	if (this.participants[participantId.participantId] != undefined) {
-    		if (this.mainSpeaker)
-    			this.updateMainParticipant(this.participants[participantId.participantId]);
-    	}
+        if (this.participants[participantId.participantId] != undefined) {
+            if (this.mainSpeaker)
+                this.updateMainParticipant(this.participants[participantId.participantId]);
+        }
     }
 }

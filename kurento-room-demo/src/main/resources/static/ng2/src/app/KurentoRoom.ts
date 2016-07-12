@@ -204,7 +204,7 @@ export class KurentoRoom {
         return this.room;
     };
 
-    private sendMessage(room: string, user: string, message: string) {
+    sendMessage(room: string, user: string, message: string) {
         
         this.sendRequest('sendMessage', { message: message, userMessage: user, roomMessage: room }, (error, response) => {
             if (error) {
@@ -213,7 +213,7 @@ export class KurentoRoom {
         });
     };
 
-    private sendCustomRequest(params: any, callback: Function) {
+    sendCustomRequest(params: any, callback: Function) {
         this.sendRequest('customRequest', params, callback);
     };
 }

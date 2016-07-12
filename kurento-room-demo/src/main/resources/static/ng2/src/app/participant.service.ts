@@ -3,22 +3,22 @@ import { KurentoRoom } from './KurentoRoom';
 import { Room } from './Room';
 import { Stream } from './Stream';
 import { Participant } from './Participant';
-import {AppParticipant} from './Participants'
+import { AppParticipant } from './AppParticipant'
 
 declare var jQuery : any;
 declare var $:any;
 @Injectable()
 export class ServiceParticipant {
 
-	private mainParticipant;
-    private localParticipant;
-    private mirrorParticipant;
-    private participants = [];
-    private roomName;
-    private connected = true;
-    private displayingRelogin = false;
-    private mainSpeaker = true;
-    private room;
+	private mainParticipant:any;
+    private localParticipant:any;
+    private mirrorParticipant:any;
+    private participants:any[] = [];
+    private roomName:string;
+    private connected:boolean = true;
+    private displayingRelogin:boolean = false;
+    private mainSpeaker:boolean = true;
+    private room:any;
 
     constructor(){}
     
@@ -33,8 +33,8 @@ export class ServiceParticipant {
     };
 
     getMainParticipant() {
-		return this.mainParticipant;
-	}
+        return this.mainParticipant;
+    }
     
     updateVideoStyle() {
         let MAX_WIDTH = 14;
@@ -67,8 +67,8 @@ export class ServiceParticipant {
     };
 
     addLocalMirror (stream: any) {
-		this.mirrorParticipant = this.addParticipant(stream);
-	};
+        this.mirrorParticipant = this.addParticipant(stream);
+    };
     
     addParticipant (stream: any) {
 
@@ -123,22 +123,22 @@ export class ServiceParticipant {
         			mainIsLocal = true;
         		} else {
         			this.localParticipant = null;
-                	this.mirrorParticipant = null;
-        		}
-        	}
-        	if (!mainIsLocal) {
-        		let keys = Object.keys(this.participants);
-        		if (keys.length > 0) {
-        			this.mainParticipant = this.participants[keys[0]];
-        		} else {
-        			this.mainParticipant = null;
-        		}
-        	}
-        	if (this.mainParticipant) {
-        		this.mainParticipant.setMain();
-        		console.log("Main video from " + this.mainParticipant.getStream().getGlobalID());
-        	} else
-        		console.error("No media streams left to display");
+                    this.mirrorParticipant = null;
+                }
+            }
+            if (!mainIsLocal) {
+                let keys = Object.keys(this.participants);
+                if (keys.length > 0) {
+                    this.mainParticipant = this.participants[keys[0]];
+                } else {
+                    this.mainParticipant = null;
+                }
+            }
+            if (this.mainParticipant) {
+                this.mainParticipant.setMain();
+                console.log("Main video from " + this.mainParticipant.getStream().getGlobalID());
+            } else
+            console.error("No media streams left to display");
         }
 
         this.updateVideoStyle();
@@ -253,72 +253,72 @@ export class ServiceParticipant {
 //                            <span>.............................</span>
 //                        </div>
 //                    </li>
-        }
-        
-        if (updateScroll) {
-        	chatDiv.scrollTop = messages.outerHeight();
-        }
+    }
+
+    if (updateScroll) {
+        chatDiv.scrollTop = messages.outerHeight();
+    }
     };
 
     showError ($window:any, LxNotificationService:any, e:any) {
         if (this.displayingRelogin) {
             console.warn('Already displaying an alert that leads to relogin');
             return false;
-          }
+        }
         this.displayingRelogin = true;
         this.removeParticipants();
         LxNotificationService.alert('Error!', e.error.message, 'Reconnect', (answer: any) => {
-        	this.displayingRelogin = false;
+            this.displayingRelogin = false;
             $window.location.href = '/';
         });
     };
-    
+
     forceClose ($window:any, LxNotificationService:any, msg:any) {
         if (this.displayingRelogin) {
             console.warn('Already displaying an alert that leads to relogin');
             return false;
-          }
+        }
         this.displayingRelogin = true;
         this.removeParticipants();
         LxNotificationService.alert('Warning!', msg, 'Reload', (answer:any) => {
-        	this.displayingRelogin = false;
+            this.displayingRelogin = false;
             $window.location.href = '/';
         });
     };
-    
+
     alertMediaError ($window: any, LxNotificationService: any, msg:any, callback: any) {
         if (this.displayingRelogin) {
             console.warn('Already displaying an alert that leads to relogin');
             return false;
-          }
-    	LxNotificationService.confirm('Warning!', 'Server media error: ' + msg
-    			+ ". Please reconnect.", { cancel:'Disagree', ok:'Agree' }, 
-    			(answer: any) => {
-    	            console.log("User agrees upon media error: " + answer);
-    	            if (answer) {
-    	            	this.removeParticipants();
-    	                $window.location.href = '/';
-    	            }
-    	            if (typeof callback === "function") {
-    	            	callback(answer);
-    	            }
-    			});
-	};
+        }
+        LxNotificationService.confirm('Warning!', 'Server media error: ' + msg
+            + ". Please reconnect.", { cancel:'Disagree', ok:'Agree' }, 
+            (answer: any) => {
+                console.log("User agrees upon media error: " + answer);
+                if (answer) {
+                    this.removeParticipants();
+                    $window.location.href = '/';
+                }
+                if (typeof callback === "function") {
+                    callback(answer);
+                }
+            });
+    };
 
     streamSpeaking (participantId: any) {
-    	if (this.participants[participantId.participantId] != undefined)
-    		document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display='';
+        if (this.participants[participantId.participantId] != undefined)
+            document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display='';
     }
 
     streamStoppedSpeaking (participantId: any) {
-    	if (this.participants[participantId.participantId] != undefined)
-    		document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display = "none";
+        if (this.participants[participantId.participantId] != undefined)
+            document.getElementById("speaker" + this.participants[participantId.participantId].thumbnailId).style.display = "none";
     }
 
     updateMainSpeaker(participantId: any) {
-    	if (this.participants[participantId.participantId] != undefined) {
-    		if (this.mainSpeaker)
-    			this.updateMainParticipant(this.participants[participantId.participantId]);
-    	}
+        if (this.participants[participantId.participantId] != undefined) {
+            if (this.mainSpeaker)
+                this.updateMainParticipant(this.participants[participantId.participantId]);
+        }
     }
 }

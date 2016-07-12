@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import {DomSanitizationService} from '@angular/platform-browser';
+import { DomSanitizationService } from '@angular/platform-browser';
 import { KurentoRoom } from '../KurentoRoom'
 import { Room } from '../Room'
 import { Stream } from '../Stream'
 import { ServiceRoom } from '../room.service'
 import { ServiceParticipant } from '../participant.service'
-import {ROUTER_DIRECTIVES, Router} from "@angular/router";
+import { KurentoroomService } from '../kurentoroom.service'
+import { ROUTER_DIRECTIVES, Router } from "@angular/router";
 
 declare var jQuery: any;
 declare var $:any;
@@ -18,22 +19,19 @@ declare var $:any;
 
 export class CallComponent {
 
-	constructor(private router: Router, private sanitizer: DomSanitizationService, private serviceRoom: ServiceRoom, private serviceParticipant: ServiceParticipant) {
-
-	}
-
-	private roomName = this.serviceRoom.getRoomName();
-    private userName = this.serviceRoom.getUserName();
-    private participants = this.serviceParticipant.getParticipants();
-    private kurento = this.serviceRoom.getKurento();
+    private roomName:string = this.serviceRoom.getRoomName();
+    private userName:string = this.serviceRoom.getUserName();
+    private participants:any[] = this.serviceParticipant.getParticipants();
+    private kurento:KurentoRoom = this.serviceRoom.getKurento();
     private message:any;
 
+    constructor(private router: Router, private sanitizer: DomSanitizationService, private kurentoroomService: KurentoroomService, private serviceRoom: ServiceRoom, private serviceParticipant: ServiceParticipant) {
+        this.kurentoroomService.connect();
+    }
+
     leaveRoom () {
-
         this.serviceRoom.getKurento().close();
-
         this.serviceParticipant.removeParticipants();
-
         this.router.navigate(["/index"]);
     };
 
@@ -54,7 +52,6 @@ export class CallComponent {
     };
     
     disableMainSpeaker (value) {
-
     	let element = document.getElementById("buttonMainSpeaker");
         if (element.classList.contains("md-person")) { //on
             element.classList.remove("md-person");
@@ -63,7 +60,7 @@ export class CallComponent {
         } else { //off
             element.classList.remove("md-recent-actors");
             element.classList.add("md-person");
-             this.serviceParticipant.disableMainSpeaker();
+            this.serviceParticipant.disableMainSpeaker();
         }
     }
 
@@ -78,7 +75,6 @@ export class CallComponent {
             element.classList.remove("md-volume-up");
             element.classList.add("md-volume-off");
             localStream.audioEnabled = false;
-
         }
     };
 
@@ -102,10 +98,10 @@ export class CallComponent {
     	if (!localStream || !participant) {
     		/*LxNotificationService.alert('Error!', "Not connected yet", 'Ok', function(answer) {
             });*/
-    		return false;
-    	}
-    	this.serviceParticipant.disconnectParticipant(participant);
-    	this.serviceRoom.getKurento().disconnectParticipant(participant.getStream());
+            return false;
+        }
+        this.serviceParticipant.disconnectParticipant(participant);
+        this.serviceRoom.getKurento().disconnectParticipant(participant.getStream());
     }
     
 
@@ -150,19 +146,18 @@ export class CallComponent {
             element.classList.add(offColorStyle);
             targetHat = false;
         }
-    	
+        
         let hatTo = targetHat ? "on" : "off";
-    	console.log("Toggle hat to " + hatTo);
-    	this.serviceRoom.getKurento().sendCustomRequest({hat: targetHat}, (error:any, response:any) => {
-    		if (error) {
+        console.log("Toggle hat to " + hatTo);
+        this.serviceRoom.getKurento().sendCustomRequest({hat: targetHat}, (error:any, response:any) => {
+            if (error) {
                 console.error("Unable to toggle hat " + hatTo, error);
                 /*LxNotificationService.alert('Error!', "Unable to toggle hat " + hatTo, 
-                		'Ok', function(answer) {});*/
-        		return false;
+                'Ok', function(answer) {});*/
+                return false;
             } else {
             	console.debug("Response on hat toggle", response);
             }
-    	});
+        });
     };
 }
-
