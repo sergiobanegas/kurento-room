@@ -29,19 +29,19 @@ export class IndexComponent implements OnInit{
 
 	ngOnInit(){
 
-		this.getKurentoInfo("wss://127.0.0.1:8443/getAllRooms")
+		this.getKurentoInfo("ws://127.0.0.1:8080/getAllRooms")
 		.then(
 			result => this.listRooms = result,
 			error =>  alert(error));
-		this.getKurentoInfo("wss://127.0.0.1:8443/getThresholdSpeaker")
+		this.getKurentoInfo("ws://127.0.0.1:8080/getThresholdSpeaker")
 		.then(
 			result => this.thresholdSpeaker = result,
 			error =>  alert(error)); 	
-		this.getKurentoInfo("wss://127.0.0.1:8443/getUpdateSpeakerInterval")
+		this.getKurentoInfo("ws://127.0.0.1:8080/getUpdateSpeakerInterval")
 		.then(
 			result => this.updateSpeakerInterval = result,
 			error =>  alert(error));
-		this.getKurentoInfo("wss://127.0.0.1:8443/getClientConfig")
+		this.getKurentoInfo("ws://127.0.0.1:8080/getClientConfig")
 		.then(
 			result => this.clientConfig = result,
 			error =>  alert(error));
