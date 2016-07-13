@@ -13,7 +13,7 @@ declare var getUserMedia: any;
 @Injectable()
 export class KurentoroomService {
 
-	private kurento: KurentoRoom = new KurentoRoom("wss://127.0.0.1:8443/room");
+	private kurento: KurentoRoom = new KurentoRoom("ws://127.0.0.1:8080/room");
 	private room: Room;
 	private roomName: string;
 	private userName: string;

@@ -59,7 +59,7 @@ public class KurentoRoomDemoApp extends KurentoRoomServerApp {
   private static final String IMG_FOLDER = "img/";
 
   private final String DEFAULT_APP_SERVER_URL = PropertiesManager.getProperty("app.uri",
-      "https://localhost:8443");
+      "http://localhost:8080");
 
   private final Integer DEMO_KMS_NODE_LIMIT = PropertiesManager.getProperty("demo.kmsLimit", 1000);
   private final String DEMO_AUTH_REGEX = PropertiesManager.getProperty("demo.authRegex");

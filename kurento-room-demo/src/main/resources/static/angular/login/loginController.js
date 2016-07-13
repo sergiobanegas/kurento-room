@@ -49,7 +49,7 @@ kurento_room.controller('loginController', function ($scope, $http, ServiceParti
         $scope.userName = room.userName;
         $scope.roomName = room.roomName;
 
-        var wsUri = 'wss://' + location.host + '/room';
+        var wsUri = 'ws://' + location.host + '/room';
 
         //show loopback stream from server
         var displayPublished = $scope.clientConfig.loopbackRemote || false;
@@ -74,7 +74,7 @@ kurento_room.controller('loginController', function ($scope, $http, ServiceParti
             var localStream = kurento.Stream(room, {
                 audio: true,
                 video: true,
-                data: true
+                data: false
             });
 
             localStream.addEventListener("access-accepted", function () {
