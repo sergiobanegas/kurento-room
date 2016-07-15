@@ -4,8 +4,7 @@ import { Room } from '../Room';
 import { Stream } from '../Stream';
 import { ROUTER_DIRECTIVES, Router } from "@angular/router";
 import { KurentoroomService } from '../kurentoroom.service'
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { Http, Response } from '@angular/http';
 
 @Component({
 	moduleId: module.id,
@@ -29,26 +28,38 @@ export class IndexComponent implements OnInit{
 
 	ngOnInit(){
 
-		this.getKurentoInfo("ws://127.0.0.1:8080/getAllRooms")
-		.then(
-			result => this.listRooms = result,
-			error =>  alert(error));
-		this.getKurentoInfo("ws://127.0.0.1:8080/getThresholdSpeaker")
-		.then(
-			result => this.thresholdSpeaker = result,
-			error =>  alert(error)); 	
-		this.getKurentoInfo("ws://127.0.0.1:8080/getUpdateSpeakerInterval")
-		.then(
-			result => this.updateSpeakerInterval = result,
-			error =>  alert(error));
-		this.getKurentoInfo("ws://127.0.0.1:8080/getClientConfig")
-		.then(
-			result => this.clientConfig = result,
-			error =>  alert(error));
+		this.getKurentoInfo("http://127.0.0.1:8080/getAllRooms").
+		subscribe(
+			data =>this.listRooms = JSON.stringify(data),
+			error=>alert(error),
+			()=>console.log('Finished Get Rooms')
+		);
+
+		this.getKurentoInfo("http://127.0.0.1:8080/getThresholdSpeaker").
+		subscribe(
+			data =>this.thresholdSpeaker = JSON.stringify(data),
+			error=>alert(error),
+			()=>console.log('Finished Get ThresholdSpeaker')
+		);
+
+		this.getKurentoInfo("http://127.0.0.1:8080/getUpdateSpeakerInterval").
+		subscribe(
+			data =>this.updateSpeakerInterval = JSON.stringify(data),
+			error=>alert(error),
+			()=>console.log('Finished Get UpdateSpeakerInterval')
+		);
+
+		this.getKurentoInfo("http://127.0.0.1:8080/getClientConfig").
+		subscribe(
+			data =>this.clientConfig = JSON.stringify(data),
+			error=>alert(error),
+			()=>console.log('Finished Get ClientConfig')
+		);
 
 	}
 
     register() {
+    	alert(this.thresholdSpeaker);
         this.kurentoroomService.configureService(this.userName, this.roomName, this.updateSpeakerInterval, this.thresholdSpeaker, this.clientConfig);
         this.router.navigate(['/call']);
     };
@@ -58,24 +69,9 @@ export class IndexComponent implements OnInit{
         this.roomName = "";
     };
 
-    private getKurentoInfo (url:string): Promise<any> {
+    private getKurentoInfo (url:string) {
         return this.http.get(url)
-        .toPromise()
-        .then(this.extractData)
-        .catch(this.handleError);
-    }
-
-    private extractData(res: Response) {
-        let body = res.json();
-        return body.data || { };
-    }
-
-    private handleError (error: any) {
-        let errMsg = (error.message) ? error.message :
-        error.status ? `${error.status} - ${error.statusText}` : 'Error: failed to get Kurento config';
-        console.error(errMsg); 
-        return Promise.reject(errMsg);
+      .map(res=>res.json());
     }
 
 }
-
