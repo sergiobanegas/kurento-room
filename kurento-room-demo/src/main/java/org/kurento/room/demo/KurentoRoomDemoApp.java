@@ -28,6 +28,10 @@ import org.kurento.room.rpc.JsonRpcUserControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -68,6 +72,22 @@ public class KurentoRoomDemoApp extends KurentoRoomServerApp {
 
   private final JsonObject DEMO_HAT_COORDS = PropertiesManager.getPropertyJson("demo.hatCoords",
       DEFAULT_HAT_COORDS.toString(), JsonObject.class);
+
+
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+      return new WebMvcConfigurerAdapter() {
+          @Override
+          public void addCorsMappings(CorsRegistry registry) {
+              registry.addMapping("/getClientConfig").allowedOrigins("http://localhost:4200");
+              registry.addMapping("/getAllRooms").allowedOrigins("http://localhost:4200");
+              registry.addMapping("/getThresholdSpeaker").allowedOrigins("http://localhost:4200");
+              registry.addMapping("/getUpdateSpeakerInterval").allowedOrigins("http://localhost:4200");
+          }
+      };
+  }
+
+
 
   @Override
   public KmsManager kmsManager() {
