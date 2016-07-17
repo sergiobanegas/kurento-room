@@ -19,14 +19,18 @@ declare var $:any;
 
 export class CallComponent {
 
-    private roomName:string = this.serviceRoom.getRoomName();
-    private userName:string = this.serviceRoom.getUserName();
+    private roomName:string = this.kurentoroomService.getRoomName();
+    private userName:string = this.kurentoroomService.getUserName();
     private participants:any[] = this.serviceParticipant.getParticipants();
     private kurento:KurentoRoom = this.serviceRoom.getKurento();
     private message:any;
 
     constructor(private router: Router, private sanitizer: DomSanitizationService, private kurentoroomService: KurentoroomService, private serviceRoom: ServiceRoom, private serviceParticipant: ServiceParticipant) {
-        this.kurentoroomService.connect();
+        if (this.kurentoroomService.getRoomName()==undefined){
+            this.router.navigate(['/']);
+        }else{
+            this.kurentoroomService.connect();
+        }      
     }
 
     leaveRoom () {

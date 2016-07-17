@@ -1,0 +1,35 @@
+import { Stream } from './Stream';
+import { Room } from './Room';
+import { RoomOptions, ParticipantOptions, MessageOptions, StreamOptions } from './options.model';
+export declare class KurentoRoom {
+    private wsUri;
+    private room;
+    private userName;
+    private jsonRpcClient;
+    private rpcParams;
+    private callback;
+    constructor(wsUri: string);
+    getRoom(): Room;
+    connect(callback: (error?: string, kurento?: KurentoRoom) => any): void;
+    connectCallback(error: string): void;
+    isRoomAvailable(): boolean;
+    disconnectCallback(): void;
+    reconnectingCallback(): void;
+    reconnectedCallback(): void;
+    onParticipantJoined(params: ParticipantOptions): void;
+    onParticipantPublished(params: ParticipantOptions): void;
+    onParticipantLeft(params: any): void;
+    onParticipantEvicted(params: any): void;
+    onNewMessage(params: MessageOptions): void;
+    iceCandidateEvent(params: any): void;
+    onRoomClosed(params: any): void;
+    onMediaError(params: any): void;
+    setRpcParams(params: any): void;
+    sendRequest(method: string, params: any, callback?: Function): void;
+    close(forced?: boolean): void;
+    disconnectParticipant(stream: Stream): void;
+    createStream(room: Room, options: StreamOptions): Stream;
+    createRoom(options: RoomOptions): Room;
+    sendMessage(room: string, user: string, message: string): void;
+    sendCustomRequest(params: any, callback: Function): void;
+}

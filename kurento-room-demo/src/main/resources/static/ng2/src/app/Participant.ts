@@ -93,7 +93,7 @@ export class Participant{
             candidate: candidate.candidate,
             sdpMid: candidate.sdpMid,
             sdpMLineIndex: candidate.sdpMLineIndex
-        }, (error, response) => {
+        }, (error:string, response:any) => {
             if (error) {
                 console.error("Error sending ICE candidate: "
                     + JSON.stringify(error));

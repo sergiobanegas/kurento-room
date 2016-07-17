@@ -26,7 +26,7 @@ export class Room {
     
     private name:string;
     private streams: Stream[] = [];
-    private participants: any[] = [];
+    private participants: any = [];
     private participantsSpeaking: string[] = [];
     private connected = false;
     private localParticipant: any;
@@ -85,7 +85,7 @@ export class Room {
         this.kurento.sendRequest('joinRoom', {
             user: this.options.user,
             room: this.options.room
-        }, (error, response) => {
+        }, (error:string, response:any) => {
             if (error) {
                 console.warn('Unable to join room', error);
                 this.ee.emitEvent('error-room', [{
@@ -97,7 +97,7 @@ export class Room {
 
                 let exParticipants = response.value;
 
-                let roomEvent = {
+                let roomEvent:any = {
                     participants: [],
                     streams: []
                 }
@@ -247,7 +247,7 @@ export class Room {
         let streams = participant.getStreams();
         for (var key in streams) {
             var stream = streams[key];
-            stream.getWebRtcPeer().addIceCandidate(candidate, (error) => {
+            stream.getWebRtcPeer().addIceCandidate(candidate, (error:string) => {
                 if (error) {
                     console.error("Error adding candidate for " + key
                         + " stream of endpoint " + msg.endpointName
@@ -301,7 +301,7 @@ export class Room {
 
         if (this.connected && !forced) {
             
-            this.kurento.sendRequest('leaveRoom', (error, response) => {
+            this.kurento.sendRequest('leaveRoom', (error:string, response:any) => {
                 if (error) {
                     console.error(error);
                 }
@@ -336,7 +336,7 @@ export class Room {
         if (participant === this.localParticipant) {
             console.log("Unpublishing my media (I'm " + participant.getID() + ")");
             delete this.localParticipant;
-            this.kurento.sendRequest('unpublishVideo', (error, response) => {
+            this.kurento.sendRequest('unpublishVideo', (error:string, response:any) => {
                 if (error) {
                     console.error(error);
                 } else {
@@ -348,7 +348,7 @@ export class Room {
             this.kurento.sendRequest('unsubscribeFromVideo', {
                 sender: stream.getGlobalID()
             },
-                (error, response)=> {
+                (error:string, response:any)=> {
                     if (error) {
                         console.error(error);
                     } else {

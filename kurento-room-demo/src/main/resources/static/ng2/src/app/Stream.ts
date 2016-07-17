@@ -198,10 +198,10 @@ export class Stream{
             }
         };
         
-        getUserMedia(constraints, (userStream)=> {
+        getUserMedia(constraints, (userStream:any)=> {
                 this.wrStream = userStream;
                 this.ee.emitEvent('access-accepted', null);
-        }, (error) => {
+        }, (error:string) => {
             console.error("Access denied", error);
             this.ee.emitEvent('access-denied', null);
         });
@@ -217,7 +217,7 @@ export class Stream{
         this.kurento.sendRequest("publishVideo", { 
         	sdpOffer: sdpOfferParam, 
             doLoopback: this.displayMyRemote() || false 
-        }, (error, response) => {
+        }, (error:string, response:any) => {
         		if (error) {
 	                console.error("Error on publishVideo: " + JSON.stringify(error));
 	            } else {
@@ -241,7 +241,7 @@ export class Stream{
         this.kurento.sendRequest("receiveVideoFrom", {
             sender: this.getGlobalID(),
             sdpOffer: sdpOfferParam
-        }, (error, response) => {
+        }, (error:string, response:any) => {
             if (error) {
                 console.error("Error on recvVideoFrom: " + JSON.stringify(error));
             } else {
@@ -257,14 +257,14 @@ export class Stream{
                  onicecandidate: this.participant.sendIceCandidate.bind(this.participant)
              }
              if (this.displayMyRemote()) {
-                 this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, (error) => {
+                 this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, (error:string) => {
                 	if(error) {
                 		return console.error(error);
                 	}
                     this.wp.generateOffer(sdpOfferCallback.bind(this));
                 });
         	} else {
-                 this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, (error) => {
+                 this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, (error:string) => {
                 	if(error) {
                 		return console.error(error);
                 	}
@@ -284,7 +284,7 @@ export class Stream{
                 onicecandidate: this.participant.sendIceCandidate.bind(this.participant),
         		connectionConstraints: offerConstraints
             }
-            this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, (error) => {
+            this.wp = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, (error:string) => {
             	if(error) {
             		return console.error(error);
             	}
@@ -363,7 +363,7 @@ export class Stream{
                     stream: this
                     }]);
             }
-        }, (error) => {
+        }, (error:string) => {
             console.error(this.getGlobalID() + ": Error setting SDP to the peer connection: "
             		+ JSON.stringify(error));
         });
@@ -374,10 +374,10 @@ export class Stream{
             this.dispose();
         } else { 
             if (this.wrStream) {
-                this.wrStream.getAudioTracks().forEach((track) => {
+                this.wrStream.getAudioTracks().forEach((track:any) => {
 	                track.stop && track.stop()
 	            })
-                this.wrStream.getVideoTracks().forEach((track) => {
+                this.wrStream.getVideoTracks().forEach((track:any) => {
 	                track.stop && track.stop()
 	            })
                 this.speechEvent.stop();
@@ -407,10 +407,10 @@ export class Stream{
             this.wp.dispose();
         } else { 
             if (this.wrStream) {
-                this.wrStream.getAudioTracks().forEach((track) => {
+                this.wrStream.getAudioTracks().forEach((track:any) => {
 	                track.stop && track.stop()
 	            })
-                this.wrStream.getVideoTracks().forEach((track) => {
+                this.wrStream.getVideoTracks().forEach((track:any) => {
 	                track.stop && track.stop()
 	            })
         	}

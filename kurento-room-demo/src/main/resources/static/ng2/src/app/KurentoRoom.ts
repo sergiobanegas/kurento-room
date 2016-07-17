@@ -205,7 +205,7 @@ export class KurentoRoom {
 
     sendMessage(room: string, user: string, message: string) {
         
-        this.sendRequest('sendMessage', { message: message, userMessage: user, roomMessage: room }, (error, response) => {
+        this.sendRequest('sendMessage', { message: message, userMessage: user, roomMessage: room }, (error:string, response:any) => {
             if (error) {
                 console.error(error);
             }

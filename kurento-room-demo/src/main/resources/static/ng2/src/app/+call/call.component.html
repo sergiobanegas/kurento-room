@@ -51,7 +51,7 @@
             <div>
                 <form>
                     <lx-text-field label="Message">
-                        <input id="inputMessage" type="text" #message>
+                        <input id="inputMessage" type="text" [(ngModel)]="message">
                     </lx-text-field>
                     <button type="submit" class="btn btn--m btn--green btn--raised" lx-ripple (click)="sendMessage()">Send</button>
                 </form>
