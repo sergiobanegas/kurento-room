@@ -79,10 +79,10 @@ public class KurentoRoomDemoApp extends KurentoRoomServerApp {
       return new WebMvcConfigurerAdapter() {
           @Override
           public void addCorsMappings(CorsRegistry registry) {
-              registry.addMapping("/getClientConfig").allowedOrigins("http://localhost:4200");
-              registry.addMapping("/getAllRooms").allowedOrigins("http://localhost:4200");
-              registry.addMapping("/getThresholdSpeaker").allowedOrigins("http://localhost:4200");
-              registry.addMapping("/getUpdateSpeakerInterval").allowedOrigins("http://localhost:4200");
+              registry.addMapping("/getClientConfig").allowedOrigins("*");
+              registry.addMapping("/getAllRooms").allowedOrigins("*");
+              registry.addMapping("/getThresholdSpeaker").allowedOrigins("*");
+              registry.addMapping("/getUpdateSpeakerInterval").allowedOrigins("*");
           }
       };
   }

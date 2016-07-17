@@ -64,7 +64,6 @@ export class KurentoRoom {
             }
         };
         this.jsonRpcClient = new RpcBuilder.clients.JsonRpcClient(config);
-
     }
 
     connectCallback(error: string) {

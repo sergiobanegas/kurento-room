@@ -59,7 +59,6 @@ export class IndexComponent implements OnInit{
 	}
 
     register() {
-    	alert(this.thresholdSpeaker);
         this.kurentoroomService.configureService(this.userName, this.roomName, this.updateSpeakerInterval, this.thresholdSpeaker, this.clientConfig);
         this.router.navigate(['/call']);
     };
